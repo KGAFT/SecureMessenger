@@ -1,9 +1,11 @@
-package com.kgaft.securemessengerapp;
+package com.kgaft.securemessengerapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+
+import com.kgaft.securemessengerapp.R;
 
 public class AuthorizeActivity extends AppCompatActivity {
     private LoginFragment loginFragment;

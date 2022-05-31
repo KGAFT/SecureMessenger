@@ -7,6 +7,6 @@
 
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".AuthorizeActivity">
+    tools:context=".Activities.AuthorizeActivity">
 
 </RelativeLayout>

@@ -29,7 +29,9 @@ public class AuthorizeController {
         });
         if(findedUsers.size()==1){
             AuthorizedDevicesService.addDevice(appId, findedUsers.get(0));
-            return "Success!";
+            String response = findedUsers.get(0).toJson();
+            response = response.split(",")[0]+response.split(",")[1]+response.split(",")[2]+"}";
+            return response;
         }
         else{
             return "Failed";

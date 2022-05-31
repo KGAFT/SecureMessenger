@@ -14,7 +14,7 @@
         android:theme="@style/NoTitle"
         tools:targetApi="31">
         <activity
-            android:name=".AuthorizeActivity"
+            android:name=".Activities.AuthorizeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

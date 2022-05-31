@@ -1,10 +1,12 @@
 package com.kgaft.securemessengerserver.DataBase.Entities;
 
+import com.google.gson.Gson;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "userslogindata")
-public class UserEntity {
+public class UserEntity implements IJsonObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long userid;
@@ -54,5 +56,10 @@ public class UserEntity {
 
     public void setUserid(long userid) {
         this.userid = userid;
+    }
+
+    @Override
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

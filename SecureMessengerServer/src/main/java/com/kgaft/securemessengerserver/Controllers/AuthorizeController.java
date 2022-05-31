@@ -41,4 +41,16 @@ public class AuthorizeController {
         AuthorizedDevicesService.unAuthorize(appId);
         return "Success";
     }
+    @PostMapping("/register")
+    public String register(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name="appId", required = true) String appId, @RequestParam(name = "name")String name){
+        ArrayList<UserEntity> results = new ArrayList<>();
+        repo.findByLogin(login).forEach(element->results.add(element));
+        if(results.size()>0){
+            return "Cannot create user with same login";
+        }
+        else{
+            repo.save(new UserEntity(0, name, login, password));
+            return "Success!";
+        }
+    }
 }

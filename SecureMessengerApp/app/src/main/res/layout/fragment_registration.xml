@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Activities.AuthorizeActivity">
+    tools:context=".Activities.AuthorizeActivity.AuthorizeActivity">
 
     <TextView
         android:id="@+id/mainLogoText"
@@ -16,8 +16,9 @@
         android:textSize="35dp"
         android:layout_marginLeft="60dp"
         android:layout_marginTop="125dp"/>
+
     <RelativeLayout
-        android:id="@+id/nameInputFrame"
+        android:id="@+id/serverAddressInputFrame"
         android:layout_width="303dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
@@ -25,12 +26,34 @@
         android:layout_marginTop="75dp"
         android:background="@drawable/edit_text_background"/>
     <EditText
-        android:id="@+id/nameInput"
+        android:id="@+id/serverAddressInput"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="63dp"
         android:layout_marginTop="75dp"
+        android:textColor="@color/white"
+        android:hint="Server address"
+        android:textColorHint="@color/white" />
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/nameInputFrame"
+        android:layout_width="303dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/mainLogoText"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/edit_text_background"/>
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/mainLogoText"
+        android:layout_marginLeft="63dp"
+        android:layout_marginTop="150dp"
         android:textColor="@color/white"
         android:hint="Name"
         android:textColorHint="@color/white" />
@@ -40,7 +63,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="225dp"
         android:background="@drawable/edit_text_background"/>
     <EditText
         android:id="@+id/loginInput"
@@ -48,7 +71,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="63dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="225dp"
         android:textColor="@color/white"
         android:hint="Login"
         android:textColorHint="@color/white" />
@@ -58,7 +81,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="225dp"
+        android:layout_marginTop="300dp"
         android:background="@drawable/edit_text_background"/>
     <EditText
         android:id="@+id/passwordInput"
@@ -66,7 +89,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="63dp"
-        android:layout_marginTop="225dp"
+        android:layout_marginTop="300dp"
         android:hint="Password"
         android:textColorHint="@color/white"
         android:textColor="@color/white"/>
@@ -76,7 +99,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="375dp"
         android:background="@drawable/edit_text_background"/>
     <EditText
         android:id="@+id/repeatPasswordInput"
@@ -84,7 +107,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="63dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="375dp"
         android:hint="Password"
         android:textColorHint="@color/white"
         android:textColor="@color/white"/>
@@ -95,7 +118,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="375dp"
+        android:layout_marginTop="450dp"
         android:background="@drawable/registrate_button_white"/>
     <androidx.constraintlayout.utils.widget.ImageFilterButton
         android:id="@+id/loginButtonChange"
@@ -103,8 +126,16 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/mainLogoText"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="525dp"
         android:background="@drawable/login_button_black"
         android:onClick="ocChangeToLoginFragment"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="75dp"
+        android:id="@+id/testText"
+        android:textColor="@color/purple_500"/>
 
 </RelativeLayout>

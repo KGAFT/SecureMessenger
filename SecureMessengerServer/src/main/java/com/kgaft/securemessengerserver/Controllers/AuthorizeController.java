@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,7 +21,7 @@ public class AuthorizeController {
     private UserLoginRepo repo;
 
     @PostMapping("/authorizeClient")
-    public String authorizeEntity(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name="appId", required = true) String appId){
+    public String authorizeEntity(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password){
         ArrayList<UserEntity> findedUsers = new ArrayList<>();
         repo.findByLogin(login).forEach(element->{
             if(element.getLogin().equals(login) & element.getPassword().equals(password)){
@@ -28,9 +29,12 @@ public class AuthorizeController {
             }
         });
         if(findedUsers.size()==1){
-            AuthorizedDevicesService.addDevice(appId, findedUsers.get(0));
+            Random random = new Random();
+            long generatedAppId = random.nextLong();
+            while(AuthorizedDevicesService.authorize(String.valueOf(generatedAppId))) generatedAppId = random.nextLong();
+            AuthorizedDevicesService.addDevice(String.valueOf(generatedAppId), findedUsers.get(0));
             String response = findedUsers.get(0).toJson();
-            response = response.split(",")[0]+response.split(",")[1]+response.split(",")[2]+"}";
+            response = response.split(",")[0]+","+response.split(",")[1]+","+response.split(",")[2]+","+Character.toString(34)+"appId"+Character.toString(34)+":"+Character.toString(34)+String.valueOf(generatedAppId)+Character.toString(34)+"}";
             return response;
         }
         else{
@@ -44,15 +48,19 @@ public class AuthorizeController {
         return "Success";
     }
     @PostMapping("/register")
-    public String register(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name="appId", required = true) String appId, @RequestParam(name = "name")String name){
+    public String register(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name = "name")String name){
         ArrayList<UserEntity> results = new ArrayList<>();
         repo.findByLogin(login).forEach(element->results.add(element));
         if(results.size()>0){
-            return "Cannot create user with same login";
+            return "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+"Cannot create user with same login!"+Character.toString(34)+"}";
         }
         else{
             repo.save(new UserEntity(0, name, login, password));
-            return "Success!";
+            return "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+"Success!"+Character.toString(34)+"}";
         }
+    }
+    @GetMapping("/checkConnection")
+    public String checkConnection(@RequestParam(name="appId")String appId){
+       return  "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+AuthorizedDevicesService.authorize(appId)+Character.toString(34)+"}";
     }
 }

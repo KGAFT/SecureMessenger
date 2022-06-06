@@ -1,5 +1,7 @@
 package com.kgaft.securemessengerserver.Controllers;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.kgaft.securemessengerserver.DataBase.DAO.FileDAO;
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.MessageEntity;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -26,28 +30,19 @@ public class MessageController {
     @GetMapping("/getMessages")
     public String getCurrentMessages(@RequestParam(name="appId")String appId){
         if(AuthorizedDevicesService.authorize(appId)){
-            String messages = "";
-            Iterable<MessageEntity> repoMessages = messageRepo.findMessageBySender(AuthorizedDevicesService.getUser(appId).getLogin(), new Timestamp(System.currentTimeMillis()-1000*60*60*24));
-            for (MessageEntity element : repoMessages) {
-                messages+=element.toJson();
-                messages+="\n";
-            }
-            repoMessages = messageRepo.findMessageByReceiver(AuthorizedDevicesService.getUser(appId).getName(), new Timestamp(System.currentTimeMillis()-1000*60*60*24));
-            for (MessageEntity element : repoMessages) {
-                messages+=element.toJson();
-                messages+="\n";
-            }
-            return messages;
+            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), new Timestamp(System.currentTimeMillis()-132*60*60*1000));
+            return new GsonBuilder().create().toJson(messages).toString();
         }
         return "Error";
     }
-    @PostMapping("/messages")
-    public String sendMessage(@RequestParam(name="appId")String appId,@RequestParam(name="receiver") String receiver,@RequestParam(name="text") String text){
+    @PostMapping("/sendMessage")
+    public String sendMessage(@RequestParam(name="appId")String appId,@RequestParam(name="receiver") String receiver,@RequestParam(name="text") String text,@RequestParam(name="files") String files){
         if(AuthorizedDevicesService.authorize(appId)){
             MessageEntity message = new MessageEntity();
             message.setTime(new Timestamp(System.currentTimeMillis()));
             message.setText(text);
             message.setReceiver(receiver);
+            message.setContentId(Arrays.stream(files.split(";")).mapToLong(num->Long.parseLong(num)).toArray());
             message.setSender(AuthorizedDevicesService.getUser(appId).getLogin());
             messageRepo.save(message);
             return "Success!";

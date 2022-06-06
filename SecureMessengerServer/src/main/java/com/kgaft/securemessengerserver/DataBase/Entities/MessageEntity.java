@@ -17,7 +17,7 @@ public class MessageEntity implements IJsonObject{
     private String messagetext;
     @Column(columnDefinition = "bigint[]")
     @Type(type = "com.vladmihalcea.hibernate.type.array.LongArrayType")
-    private long[] contentid;
+    private long[] contentid = new long[]{0};
 
     //@Temporal(TemporalType.TIMESTAMP)
     public Timestamp time;

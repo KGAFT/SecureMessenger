@@ -47,7 +47,6 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
     public static boolean checkUser(){
         try{
-            System.out.println(instance.currentClientInfo.getAppData().getAsLong("appId").longValue());
             if(AuthorizeUtility.checkConnection(instance.currentClientInfo.getAppData().getAsString("appId"), instance.currentClientInfo.getAppData().getAsString("serverAddress"))){
                 instance.startActivity(new Intent(instance, MainActivity.class));
                 return true;

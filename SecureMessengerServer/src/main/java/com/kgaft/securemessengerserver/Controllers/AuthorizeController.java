@@ -20,7 +20,7 @@ public class AuthorizeController {
     @Autowired
     private UserLoginRepo repo;
 
-    @PostMapping("/authorizeClient")
+    @GetMapping("/authorizeClient")
     public String authorizeEntity(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password){
         ArrayList<UserEntity> findedUsers = new ArrayList<>();
         repo.findByLogin(login).forEach(element->{

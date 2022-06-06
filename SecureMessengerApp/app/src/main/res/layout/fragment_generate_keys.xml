@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".Activities.MainActivity.Fragments.GenerateKeysFragment">
+    <ImageView
+        android:id="@+id/qrCodeImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="50dp"/>
+    <RelativeLayout
+        android:id="@+id/receiverInputFrame"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/qrCodeImage"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="75dp"
+        android:background="@drawable/edit_text_background"/>
+    <EditText
+        android:id="@+id/receiverInput"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/qrCodeImage"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="75dp"
+        android:textSize="10dp"
+
+        android:hint="Receiver Input"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"/>
+    <RelativeLayout
+        android:id="@+id/cryptCodeInputFrame"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/receiverInput"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="75dp"
+        android:background="@drawable/edit_text_background"/>
+    <EditText
+        android:id="@+id/cryptCodeInput"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/receiverInput"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="75dp"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:hint="Enter your comrades code"
+        android:textColorHint="@color/white"/>
+    <Button
+        android:id="@+id/startNewChatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cryptCodeInput"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="150dp"
+        android:text="Start chat"/>
+
+</RelativeLayout>

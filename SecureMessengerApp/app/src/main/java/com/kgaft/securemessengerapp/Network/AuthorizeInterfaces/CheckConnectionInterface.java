@@ -1,4 +1,4 @@
-package com.kgaft.securemessengerapp.Network;
+package com.kgaft.securemessengerapp.Network.AuthorizeInterfaces;
 
 import com.kgaft.securemessengerapp.Network.Entities.ServerResponse;
 

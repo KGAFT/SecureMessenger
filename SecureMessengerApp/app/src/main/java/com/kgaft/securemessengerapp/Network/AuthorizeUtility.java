@@ -1,5 +1,8 @@
 package com.kgaft.securemessengerapp.Network;
 
+import com.kgaft.securemessengerapp.Network.AuthorizeInterfaces.CheckConnectionInterface;
+import com.kgaft.securemessengerapp.Network.AuthorizeInterfaces.LoginNetworkInterface;
+import com.kgaft.securemessengerapp.Network.AuthorizeInterfaces.RegisterNetworkInterface;
 import com.kgaft.securemessengerapp.Network.Entities.UserEntity;
 
 import java.io.IOException;

@@ -18,15 +18,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 @RestController
 public class MessageController {
     @Autowired
     private MessageRepo messageRepo;
+    private HashMap<String, String> waitingToJoin = new HashMap<>();
+    @GetMapping("/startChat")
+    public String startChat(@RequestParam(name="appId") String appId){
+        if (AuthorizedDevicesService.authorize(appId)) {
+            try {
+                String response = "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+waitingToJoin.get(AuthorizedDevicesService.getUser(appId).getLogin())+Character.toString(34)+"}";
+                waitingToJoin.remove(AuthorizedDevicesService.getUser(appId).getLogin());
+                return response;
+            }catch (Exception e){
+                return "Failed";
+            }
+        }
+        return "Error: cannot authorize...";
+    }
+    @PostMapping("/joinChat")
+    public String joinChat(@RequestParam(name = "appId")String appId, @RequestParam(name="receiver") String receiver){
+        if(AuthorizedDevicesService.authorize(appId)){
+            waitingToJoin.put(receiver, AuthorizedDevicesService.getUser(appId).getLogin());
+            return "Success";
+        }
+        return "Error: cannot authorize";
+    }
     @GetMapping("/getMessages")
     public String getCurrentMessages(@RequestParam(name="appId")String appId){
         if(AuthorizedDevicesService.authorize(appId)){

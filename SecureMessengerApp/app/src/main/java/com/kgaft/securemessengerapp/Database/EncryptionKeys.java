@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 
 import com.kgaft.securemessengerapp.Utils.KeyUtil;
 
+import java.util.ArrayList;
+
 public class EncryptionKeys extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "EncryptionKeys";
     private static final int VERSION = 1;
@@ -46,9 +48,20 @@ public class EncryptionKeys extends SQLiteOpenHelper {
     }
     @SuppressLint("Range")
     public byte[] getKey(String receiver){
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor data = db.query(TABLE_NAME, new String[]{"encryptionKey"}, "receiverLogin = ?", new String[]{receiver}, null, null, null);
         data.moveToFirst();
         return data.getBlob(data.getColumnIndex("encryptionKey"));
+    }
+    @SuppressLint("Range")
+    public ArrayList<String> getAllReceivers(){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<String> receivers = new ArrayList<>();
+        Cursor data = db.query(TABLE_NAME, new String[]{"receiverLogin"}, null, null, null, null, null);
+        data.moveToFirst();
+        do{
+            receivers.add(data.getString(data.getColumnIndex("receiverLogin")));
+        }while(data.moveToNext());
+        return receivers;
     }
 }

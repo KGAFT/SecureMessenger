@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     tools:context=".Activities.MainActivity.Fragments.MessagesFragment">
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+      <LinearLayout
+          android:id="@+id/chatContainer"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical" />
+   </ScrollView>
 
    <com.google.android.material.floatingactionbutton.FloatingActionButton
        android:id="@+id/startNewChat"

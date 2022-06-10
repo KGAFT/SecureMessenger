@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kgaft.securemessengerapp.Database.CurrentClientInfo;
+import com.kgaft.securemessengerapp.Database.EncryptionKeys;
 import com.kgaft.securemessengerapp.Network.Entities.MessageEntity;
 import com.kgaft.securemessengerapp.Network.MessageUtility;
 import com.kgaft.securemessengerapp.R;
@@ -22,9 +24,11 @@ import java.util.ArrayList;
 
 
 public class MessagesFragment extends Fragment{
-    private ArrayList<MessageEntity> messages;
     private CurrentClientInfo currentClient;
+    private EncryptionKeys keys;
+    private ArrayList<ChatPreview> chatFragments;
     private FloatingActionButton startNewChatButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,14 +41,16 @@ public class MessagesFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         currentClient = new CurrentClientInfo(view.getContext(), null, null, 0);
         ContentValues appData = currentClient.getAppData();
-        try {
-            messages = MessageUtility.getMessages(appData.getAsString("appId"), appData.getAsString("serverAddress"));
-            messages.get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        keys = new EncryptionKeys(view.getContext(), null, null, 0);
     }
-
+    public void refreshChats(){
+        chatFragments = new ArrayList<>();
+        keys.getAllReceivers().forEach(element->{
+            ChatPreview chat = new ChatPreview(element, null, element);
+            chatFragments.add(chat);
+            getParentFragmentManager().beginTransaction().add(R.id.chatContainer, chat).commitNow();
+        });
+    }
 
 
 }

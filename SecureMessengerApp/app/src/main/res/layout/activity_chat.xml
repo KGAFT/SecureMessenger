@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".Activities.ChatActivity.ChatActivity">
+    <RelativeLayout
+        android:id="@+id/receiverInfo"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#2a2a2a">
+        <ImageView
+            android:id="@+id/receiverIcon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"/>
+        <TextView
+            android:id="@+id/receiverName"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginLeft="100dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+        />
+        <TextView
+            android:id="@+id/receiverLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecycler"
+        android:layout_width="match_parent"
+        android:layout_alignBottom="@+id/textInputFrame"
+        android:layout_height="630dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginTop="55dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <RelativeLayout
+        android:id="@+id/textInputFrame"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:background="#2a2a2a"
+        >
+        <ImageButton
+            android:id="@+id/addFileButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#2a2a2a"
+            android:src="@drawable/paper_clip"/>
+        <EditText
+            android:id="@+id/messageTextInput"
+            android:layout_width="330dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:textSize="10dp"
+            android:textColor="@color/white"/>
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="#2a2a2a"
+            android:src="@drawable/send_button_icon"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</RelativeLayout>

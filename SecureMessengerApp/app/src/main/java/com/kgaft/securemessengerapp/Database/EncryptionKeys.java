@@ -59,9 +59,14 @@ public class EncryptionKeys extends SQLiteOpenHelper {
         ArrayList<String> receivers = new ArrayList<>();
         Cursor data = db.query(TABLE_NAME, new String[]{"receiverLogin"}, null, null, null, null, null);
         data.moveToFirst();
-        do{
-            receivers.add(data.getString(data.getColumnIndex("receiverLogin")));
-        }while(data.moveToNext());
+        try{
+            do{
+                receivers.add(data.getString(data.getColumnIndex("receiverLogin")));
+            }while(data.moveToNext());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return receivers;
     }
 }

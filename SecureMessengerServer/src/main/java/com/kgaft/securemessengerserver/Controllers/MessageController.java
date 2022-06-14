@@ -1,19 +1,15 @@
 package com.kgaft.securemessengerserver.Controllers;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.kgaft.securemessengerserver.DataBase.DAO.FileDAO;
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.MessageEntity;
+import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
 import com.kgaft.securemessengerserver.DataBase.Repositories.MessageRepo;
 import com.kgaft.securemessengerserver.Service.AuthorizedDevicesService;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.SQLException;
@@ -29,64 +25,77 @@ public class MessageController {
     public String startChat(@RequestParam(name="appId") String appId){
         if (AuthorizedDevicesService.authorize(appId)) {
             try {
-                String response = "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+waitingToJoin.get(AuthorizedDevicesService.getUser(appId).getLogin())+Character.toString(34)+"}";
+                String response = new ResponseEntity(waitingToJoin.get(AuthorizedDevicesService.getUser(appId).getLogin())).toJson();
                 waitingToJoin.remove(AuthorizedDevicesService.getUser(appId).getLogin());
                 return response;
             }catch (Exception e){
-                return "Failed";
+                return "Error";
             }
         }
-        return "Error: cannot authorize...";
+        return "Error: cannot authorize";
     }
     @PostMapping("/joinChat")
     public String joinChat(@RequestParam(name = "appId")String appId, @RequestParam(name="receiver") String receiver){
         if(AuthorizedDevicesService.authorize(appId)){
             waitingToJoin.put(receiver, AuthorizedDevicesService.getUser(appId).getLogin());
-            return "Success";
+            return new ResponseEntity("true").toJson();
         }
-        return "Error: cannot authorize";
+        return new ResponseEntity("Error: cannot authorize").toJson();
     }
     @GetMapping("/getMessages")
     public String getCurrentMessages(@RequestParam(name="appId")String appId){
         if(AuthorizedDevicesService.authorize(appId)){
-            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), new Timestamp(System.currentTimeMillis()-132*60*60*1000));
+            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), System.currentTimeMillis()-132*60*60*1000);
             return new GsonBuilder().create().toJson(messages).toString();
         }
         return "Error";
+    }
+    @GetMapping("/getMessagesMoreThanTimeStamp")
+    public String getMessagesByTimeStamp(@RequestParam(name="appId") String appId, @RequestParam(name="timeInMilliseconds") long time){
+        if(AuthorizedDevicesService.authorize(appId)){
+            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), time);
+            return new GsonBuilder().create().toJson(messages).toString();
+        }
+        else{
+            return "Failed";
+        }
     }
     @PostMapping("/sendMessage")
     public String sendMessage(@RequestParam(name="appId")String appId,@RequestParam(name="receiver") String receiver,@RequestParam(name="text") String text,@RequestParam(name="files") String files){
         if(AuthorizedDevicesService.authorize(appId)){
             MessageEntity message = new MessageEntity();
-            message.setTime(new Timestamp(System.currentTimeMillis()));
+            message.setTime(System.currentTimeMillis());
             message.setText(text);
             message.setReceiver(receiver);
             message.setContentId(Arrays.stream(files.split(";")).mapToLong(num->Long.parseLong(num)).toArray());
             message.setSender(AuthorizedDevicesService.getUser(appId).getLogin());
             messageRepo.save(message);
-            return "Success!";
+            return new ResponseEntity("true").toJson();
         }
         else{
-            return "Failed!";
+            return new ResponseEntity("false").toJson();
         }
     }
     @PostMapping("/uploadFile")
-    public String uploadFile(HttpServletRequest request, String fileName) throws IOException {
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setInputStream(request.getInputStream());
-        fileEntity.setFileName(fileName);
-        try {
-            return String.valueOf(FileDAO.saveFile(fileEntity));
-        } catch (SQLException e) {
-            return "Failed";
+    public String uploadFile(InputStream dataStream, @RequestParam(name="fileName") String fileName, @RequestParam(name="appId")String appId) throws IOException {
+        if(AuthorizedDevicesService.authorize(appId)){
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setInputStream(dataStream);
+            fileEntity.setFileName(fileName);
+            try {
+                return new ResponseEntity(String.valueOf(FileDAO.saveFile(fileEntity))).toJson();
+            } catch (SQLException e) {
+                return "Failed";
+            }
         }
+        return "Failed";
     }
     @GetMapping("/getFile")
-    public void getFile(@RequestParam(name="appId") String appId, @RequestParam(name="fileId")long fileid, HttpServletResponse response) throws SQLException, IOException {
+    public void getFile(@RequestParam(name="appId") String appId, @RequestParam(name= "fileId")long fileId, HttpServletResponse response) throws SQLException, IOException {
         if(AuthorizedDevicesService.authorize(appId)){
             int canRead;
             byte[] buffer = new byte[8*1024];
-            FileEntity file = FileDAO.getFileById(fileid);
+            FileEntity file = FileDAO.getFileById(fileId);
             InputStream is = file.getInputStream();
             while((canRead= is.read(buffer))!=-1){
                 response.getOutputStream().write(buffer,0 , canRead);

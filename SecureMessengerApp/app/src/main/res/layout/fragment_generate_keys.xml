@@ -6,30 +6,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     tools:context=".Activities.MainActivity.Fragments.GenerateKeysFragment">
-    <ImageView
-        android:id="@+id/qrCodeImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="50dp"/>
-
-    <ImageButton
-        android:id="@+id/startCamera"
-        android:layout_width="50dp"
+    <TextView
+        android:id="@+id/encryptionKeyOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:textIsSelectable="true"
+        android:text="Your key is: "/>
+    <RelativeLayout
+        android:id="@+id/serverAddressInputFrame"
+        android:layout_width="303dp"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/qrCodeImage"
-        android:layout_marginLeft="170dp"
-        android:layout_marginTop="225dp"
-        android:src="@drawable/camera_icon"/>
+        android:layout_alignTop="@id/encryptionKeyOutput"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/edit_text_background"/>
+    <EditText
+        android:id="@+id/encryptionKeyInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="63dp"
+        android:layout_marginTop="100dp"
+        android:layout_alignTop="@id/encryptionKeyOutput"
+        android:textColor="@color/white"
+        android:hint="Your friends encryption key"
+        android:textColorHint="@color/white" />
+    <Button
+        android:id="@+id/startChatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="275dp"
+        android:text="Start chat"
+        />
     <Button
         android:id="@+id/getBackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/qrCodeImage"
         android:layout_marginLeft="150dp"
-        android:layout_marginTop="275dp"
+        android:layout_marginTop="375dp"
         android:text="Get back"
-        android:onClick="ocChangeToCamera"/>
+        />
 
 
 </RelativeLayout>

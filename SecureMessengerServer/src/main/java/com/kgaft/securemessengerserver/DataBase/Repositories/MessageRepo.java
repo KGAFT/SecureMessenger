@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Timestamp;
 
 public interface MessageRepo extends CrudRepository<MessageEntity, Long> {
-    @Query("FROM MessageEntity WHERE sender=:sender and time>=:date")
-    public Iterable<MessageEntity> findMessageBySender(@Param("sender") String sender, @Param("date") Timestamp date);
-    @Query("FROM MessageEntity WHERE receiver=:receiver and time>=:date")
-    public Iterable<MessageEntity> findMessageByReceiver(@Param("receiver") String receiver, @Param("date") Timestamp date);
-    @Query("FROM MessageEntity WHERE (receiver=:userLogin or sender=:userLogin) and time>=:date")
-    public Iterable<MessageEntity> findMessageByReceiverOrSender(@Param("userLogin") String userLogin, @Param("date") Timestamp date);
+    @Query("FROM MessageEntity WHERE sender=:sender and time>=:time")
+    public Iterable<MessageEntity> findMessageBySender(@Param("sender") String sender, @Param("time") long time);
+    @Query("FROM MessageEntity WHERE receiver=:receiver and time>=:time")
+    public Iterable<MessageEntity> findMessageByReceiver(@Param("receiver") String receiver, @Param("time") long time);
+    @Query("FROM MessageEntity WHERE (receiver=:userLogin or sender=:userLogin) and time>=:time")
+    public Iterable<MessageEntity> findMessageByReceiverOrSender(@Param("userLogin") String userLogin, @Param("time") long time);
 
 }

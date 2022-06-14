@@ -1,9 +1,13 @@
 package com.kgaft.securemessengerapp.Activities.MainActivity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -14,6 +18,7 @@ import com.kgaft.securemessengerapp.Activities.MainActivity.Fragments.GenerateKe
 import com.kgaft.securemessengerapp.Activities.MainActivity.Fragments.MessagesFragment;
 import com.kgaft.securemessengerapp.Activities.MainActivity.Fragments.SettingsFragment;
 import com.kgaft.securemessengerapp.R;
+import com.kgaft.securemessengerapp.Services.MessageService;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     private MessagesFragment messagesFragment;
@@ -21,17 +26,20 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     private SettingsFragment settingsFragment;
     private GenerateKeysFragment generateKeysFragment;
     private CameraFragment cameraFragment;
+    private MessageService messages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        messagesFragment = new MessagesFragment();
+        messagesFragment = new MessagesFragment(this);
         settingsFragment = new SettingsFragment();
         cameraFragment = new CameraFragment();
         generateKeysFragment = new GenerateKeysFragment(this);
         getSupportFragmentManager().beginTransaction().add(R.id.mainActivityContainer, messagesFragment).commitNow();
         bottomNavigationView = findViewById(R.id.bottomNavigationBar);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
+        startService(new Intent(this, MessageService.class));
     }
 
     @Override
@@ -47,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         }
         return true;
     }
+
+
+
     @Override
     public void onBackPressed(){
         getBack();
@@ -69,10 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
     public void getBack(){
        clearActivity();
-        messagesFragment.refreshChats();
+       getSupportFragmentManager().beginTransaction().add(R.id.mainActivityContainer, messagesFragment).commitNow();
+       messagesFragment.refreshChats();
     }
-    public void ocChangeToCamera(View view) {
-        clearActivity();
-        getSupportFragmentManager().beginTransaction().add(R.id.mainActivityContainer, cameraFragment).commitNow();
-    }
+
 }

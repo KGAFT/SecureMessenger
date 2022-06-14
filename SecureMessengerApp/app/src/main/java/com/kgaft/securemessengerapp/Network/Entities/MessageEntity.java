@@ -1,12 +1,13 @@
 package com.kgaft.securemessengerapp.Network.Entities;
 
+import androidx.annotation.Nullable;
+
 import com.kgaft.securemessengerapp.Utils.Crypt;
 import com.kgaft.securemessengerapp.Utils.KeyUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -20,15 +21,18 @@ public class MessageEntity implements Crypt {
     private String receiver;
     private String messagetext;
     private long[] contentid;
-    private String time;
+    private long time;
 
-    public MessageEntity(long messageid, String sender, String receiver, String messagetext, long[] contentid, String time) {
+    public MessageEntity(long messageid, String sender, String receiver, String messagetext, long[] contentid, long time) {
         this.messageid = messageid;
         this.sender = sender;
         this.receiver = receiver;
         this.messagetext = messagetext;
         this.contentid = contentid;
         this.time = time;
+    }
+
+    public MessageEntity() {
     }
 
     public long getMessageid() {
@@ -71,11 +75,11 @@ public class MessageEntity implements Crypt {
         this.contentid = contentid;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -129,5 +133,14 @@ public class MessageEntity implements Crypt {
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
         content = cipher.doFinal(content);
         messagetext = new String(content, StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try{
+           return ((MessageEntity)obj).getMessageid()==messageid;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

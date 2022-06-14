@@ -11,20 +11,8 @@ public class FileEntity {
     private InputStream inputStream;
 
     private Timestamp time;
-    private FileInputStream fileInput;
 
-    public FileEntity(long fileId, String fileName, InputStream inputStream, Timestamp time) {
-        this.fileId = fileId;
-        this.fileName = fileName;
-        this.inputStream = inputStream;
-        this.time = time;
-    }
 
-    public FileEntity(long fileId, String fileName, FileInputStream fileInput) {
-        this.fileId = fileId;
-        this.fileName = fileName;
-        this.fileInput = fileInput;
-    }
 
     public Timestamp getTime() {
         return time;
@@ -34,14 +22,6 @@ public class FileEntity {
         this.time = time;
     }
 
-    public FileInputStream getFileInput() {
-        return fileInput;
-    }
-
-
-    public void setFileInput(FileInputStream fileInput) {
-        this.fileInput = fileInput;
-    }
 
     public FileEntity() {
     }

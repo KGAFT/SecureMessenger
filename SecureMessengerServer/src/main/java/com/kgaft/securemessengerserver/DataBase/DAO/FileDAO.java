@@ -9,10 +9,16 @@ public class FileDAO {
     private static final String url = "jdbc:postgresql://localhost:5432/securemessenger";
     private static final String login = "KGAFTX";
 
-    private static final String password = "123456";
+    private static final String password = "12345";
 
     private static final String TABLE_NAME = "usersfiledata";
 
+    public static void executeFilesTable() throws SQLException {
+        getConnection().createStatement().execute("CREATE TABLE "+TABLE_NAME+"(" +
+                "fileid BIGINT," +
+                "filecontent bytea," +
+                "filename TEXT);");
+    }
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, login, password);
     }
@@ -23,7 +29,7 @@ public class FileDAO {
         long generatedId = random.nextLong();
         while(getNameOfFile(generatedId).length()>0) generatedId = random.nextLong();
         pstmt.setLong(1, generatedId);
-        pstmt.setBinaryStream(2, file.getFileInput());
+        pstmt.setBinaryStream(2, file.getInputStream());
         pstmt.setString(3, file.getFileName());
         pstmt.execute();
         return generatedId;

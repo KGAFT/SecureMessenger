@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "usersmessagesdata")
-public class MessageEntity implements IJsonObject{
+public class  MessageEntity implements IJsonObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long messageid;
@@ -19,8 +19,7 @@ public class MessageEntity implements IJsonObject{
     @Type(type = "com.vladmihalcea.hibernate.type.array.LongArrayType")
     private long[] contentid = new long[]{0};
 
-    //@Temporal(TemporalType.TIMESTAMP)
-    public Timestamp time;
+    public long time;
 
     public MessageEntity() {
     }
@@ -33,11 +32,11 @@ public class MessageEntity implements IJsonObject{
         this.messageid = id;
     }
 
-    public Timestamp getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

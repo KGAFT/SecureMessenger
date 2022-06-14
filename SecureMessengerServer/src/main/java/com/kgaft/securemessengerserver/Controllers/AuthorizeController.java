@@ -1,4 +1,5 @@
 package com.kgaft.securemessengerserver.Controllers;
+import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.UserEntity;
 import com.kgaft.securemessengerserver.DataBase.Repositories.UserLoginRepo;
 import com.kgaft.securemessengerserver.Service.AuthorizedDevicesService;
@@ -45,22 +46,23 @@ public class AuthorizeController {
     @PostMapping("/unAuthorizeClient")
     public String unAuthorize(@RequestParam(name="appId", required = true)String appId){
         AuthorizedDevicesService.unAuthorize(appId);
-        return "Success";
+        return new ResponseEntity("Success").toJson();
     }
     @PostMapping("/register")
     public String register(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name = "name")String name){
         ArrayList<UserEntity> results = new ArrayList<>();
         repo.findByLogin(login).forEach(element->results.add(element));
         if(results.size()>0){
-            return "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+"Cannot create user with same login!"+Character.toString(34)+"}";
+            return new ResponseEntity("Cannot create user with same login!").toJson();
+
         }
         else{
             repo.save(new UserEntity(0, name, login, password));
-            return "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+"Success!"+Character.toString(34)+"}";
+            return new ResponseEntity("Success!").toJson();
         }
     }
     @GetMapping("/checkConnection")
     public String checkConnection(@RequestParam(name="appId")String appId){
-       return  "{"+Character.toString(34)+"response"+Character.toString(34)+":"+Character.toString(34)+AuthorizedDevicesService.authorize(appId)+Character.toString(34)+"}";
+        return new ResponseEntity(String.valueOf(AuthorizedDevicesService.authorize(appId))).toJson();
     }
 }

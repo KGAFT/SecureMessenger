@@ -10,7 +10,9 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface JoinChatInterface {
+public interface ChatStartInterface {
     @POST("/joinChat")
-    Call<ServerResponse> getMessages(@Query("appId")String appId, @Query("receiver")String receiver);
+    Call<ServerResponse> joinChat(@Query("appId")String appId, @Query("receiver")String receiver);
+    @GET("startChat")
+    Call<ServerResponse> startChat(@Query("appId")String appId);
 }

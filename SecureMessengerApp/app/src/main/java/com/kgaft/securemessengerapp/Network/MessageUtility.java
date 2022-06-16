@@ -1,8 +1,7 @@
 package com.kgaft.securemessengerapp.Network;
 
-import com.kgaft.securemessengerapp.Network.MessagesInterfaces.JoinChatInterface;
+import com.kgaft.securemessengerapp.Network.MessagesInterfaces.ChatStartInterface;
 import com.kgaft.securemessengerapp.Network.MessagesInterfaces.MessagesInterface;
-import com.kgaft.securemessengerapp.Network.MessagesInterfaces.StartChatInterface;
 import com.kgaft.securemessengerapp.Network.Entities.MessageEntity;
 
 import java.io.IOException;
@@ -20,25 +19,26 @@ public class MessageUtility {
     }
     public ArrayList<MessageEntity> getMessages() throws IOException {
         MessagesInterface messageController = retrofit.create(MessagesInterface.class);
-        return messageController.getMessages(appId).execute().body();
+        return messageController.getAllMessages(appId).execute().body();
     }
     public ArrayList<MessageEntity> getMessagesMoreThanTimeStamp(long timeInMilliseconds) throws IOException {
         MessagesInterface messagesController = retrofit.create(MessagesInterface.class);
-        return messagesController.getMessagesByTimestamp(appId, timeInMilliseconds).execute().body();
+        return messagesController.getMessagesByTime(appId, timeInMilliseconds).execute().body();
     }
     public String startChat(){
-        StartChatInterface startChatInterface = retrofit.create(StartChatInterface.class);
+        ChatStartInterface startChatInterface = retrofit.create(ChatStartInterface.class);
+
         try {
-            return startChatInterface.getResponse(appId).execute().body().getResponse();
+            return startChatInterface.startChat(appId).execute().body().getResponse();
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed";
         }
     }
     public boolean joinChat(String receiver) {
-        JoinChatInterface joinChatController = retrofit.create(JoinChatInterface.class);
+        ChatStartInterface joinChatController = retrofit.create(ChatStartInterface.class);
         try{
-            return Boolean.parseBoolean(joinChatController.getMessages(appId, receiver).execute().body().getResponse());
+            return Boolean.parseBoolean(joinChatController.joinChat(appId, receiver).execute().body().getResponse());
         }catch (Exception e){
             return false;
         }

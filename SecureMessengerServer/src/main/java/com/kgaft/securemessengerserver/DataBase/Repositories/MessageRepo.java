@@ -15,5 +15,6 @@ public interface MessageRepo extends CrudRepository<MessageEntity, Long> {
     public Iterable<MessageEntity> findMessageByReceiver(@Param("receiver") String receiver, @Param("time") long time);
     @Query("FROM MessageEntity WHERE (receiver=:userLogin or sender=:userLogin) and time>=:time")
     public Iterable<MessageEntity> findMessageByReceiverOrSender(@Param("userLogin") String userLogin, @Param("time") long time);
-
+    @Query("FROM MessageEntity WHERE (receiver=:userLogin or sender=:userLogin)")
+    public Iterable<MessageEntity> findMessageByReceiverOrSender(@Param("userLogin") String userLogin);
 }

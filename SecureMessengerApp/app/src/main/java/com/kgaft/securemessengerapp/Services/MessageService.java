@@ -62,7 +62,7 @@ public class MessageService extends Service {
                                     messages.insertMessage(element);
                                 }
                             });
-                            lastTimeOfGetMessages = System.currentTimeMillis();
+                            lastTimeOfGetMessages = System.currentTimeMillis()-10000;
                         } else {
                             ArrayList<String> receivers = keys.getAllReceivers();
                             messageUtility.getMessagesMoreThanTimeStamp(lastTimeOfGetMessages).forEach(element -> {
@@ -70,11 +70,11 @@ public class MessageService extends Service {
                                     messages.insertMessage(element);
                                 }
                             });
-                            lastTimeOfGetMessages = System.currentTimeMillis();
+                            lastTimeOfGetMessages = System.currentTimeMillis()-10000;
                         }
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+
                     }
                 }
             }

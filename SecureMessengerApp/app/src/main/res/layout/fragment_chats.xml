@@ -4,15 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Activities.MainActivity.Fragments.MessagesFragment">
+    tools:context=".Activities.MainActivity.Fragments.ChatsFragment">
    <ScrollView
        android:layout_width="match_parent"
-       android:layout_height="match_parent">
+       android:layout_height="wrap_content"
+      android:layout_marginBottom="52dp">
       <LinearLayout
-          android:id="@+id/chatContainer"
+         android:id="@+id/chatsContainer"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical" />
+          android:layout_height="wrap_content"
+          android:orientation="vertical"/>
    </ScrollView>
 
    <com.google.android.material.floatingactionbutton.FloatingActionButton

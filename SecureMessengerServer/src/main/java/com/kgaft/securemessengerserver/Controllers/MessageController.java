@@ -1,7 +1,7 @@
 package com.kgaft.securemessengerserver.Controllers;
 
 import com.google.gson.GsonBuilder;
-import com.kgaft.securemessengerserver.DataBase.DAO.FileDAO;
+import com.kgaft.securemessengerserver.DataBase.JDBCDB.JDBCFileDB;
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.MessageEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -42,23 +41,21 @@ public class MessageController {
         }
         return new ResponseEntity("Error: cannot authorize").toJson();
     }
-    @GetMapping("/getMessages")
-    public String getCurrentMessages(@RequestParam(name="appId")String appId){
-        if(AuthorizedDevicesService.authorize(appId)){
-            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), System.currentTimeMillis()-132*60*60*1000);
-            return new GsonBuilder().create().toJson(messages).toString();
-        }
-        return "Error";
-    }
-    @GetMapping("/getMessagesMoreThanTimeStamp")
-    public String getMessagesByTimeStamp(@RequestParam(name="appId") String appId, @RequestParam(name="timeInMilliseconds") long time){
+    @GetMapping("/getMessagesByTime")
+    public String getCurrentMessages(@RequestParam(name="appId")String appId, @RequestParam(name="timeInMilliseconds") long time){
         if(AuthorizedDevicesService.authorize(appId)){
             Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin(), time);
             return new GsonBuilder().create().toJson(messages).toString();
         }
-        else{
-            return "Failed";
+        return "Error";
+    }
+    @GetMapping("/getMessages")
+    public String getAllMessages(@RequestParam(name="appId")String appId){
+        if(AuthorizedDevicesService.authorize(appId)){
+            Iterable<MessageEntity> messages = messageRepo.findMessageByReceiverOrSender(AuthorizedDevicesService.getUser(appId).getLogin());
+            return new GsonBuilder().create().toJson(messages).toString();
         }
+        return "Error";
     }
     @PostMapping("/sendMessage")
     public String sendMessage(@RequestParam(name="appId")String appId,@RequestParam(name="receiver") String receiver,@RequestParam(name="text") String text,@RequestParam(name="files") String files){
@@ -83,7 +80,7 @@ public class MessageController {
             fileEntity.setInputStream(dataStream);
             fileEntity.setFileName(fileName);
             try {
-                return new ResponseEntity(String.valueOf(FileDAO.saveFile(fileEntity))).toJson();
+                return new ResponseEntity(String.valueOf(JDBCFileDB.saveFile(fileEntity))).toJson();
             } catch (SQLException e) {
                 return "Failed";
             }
@@ -95,7 +92,7 @@ public class MessageController {
         if(AuthorizedDevicesService.authorize(appId)){
             int canRead;
             byte[] buffer = new byte[8*1024];
-            FileEntity file = FileDAO.getFileById(fileId);
+            FileEntity file = JDBCFileDB.getFileById(fileId);
             InputStream is = file.getInputStream();
             while((canRead= is.read(buffer))!=-1){
                 response.getOutputStream().write(buffer,0 , canRead);
@@ -107,7 +104,7 @@ public class MessageController {
     public String getNameOfFile(@RequestParam(name="appId") String appId, @RequestParam(name="fileId")String fileId){
         if(AuthorizedDevicesService.authorize(appId)){
             try {
-                return FileDAO.getNameOfFile(Long.parseLong(fileId));
+                return JDBCFileDB.getNameOfFile(Long.parseLong(fileId));
             } catch (SQLException e) {
                 return "";
             }

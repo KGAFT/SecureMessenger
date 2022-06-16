@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.utils.widget.ImageFilterButton;
 import androidx.fragment.app.Fragment;
 
@@ -22,27 +23,24 @@ import com.kgaft.securemessengerapp.Database.EncryptionKeys;
 import com.kgaft.securemessengerapp.Database.MessageDatabase;
 import com.kgaft.securemessengerapp.R;
 
-
-public class ChatPreview extends Fragment {
-    private String chatName;
-    private Bitmap imagePreview;
-    private TextView chatNameView;
-    private ImageView imageView;
-    private ImageFilterButton actionButton;
+public class ChatPreviewFragment extends Fragment {
+    private TextView chatName;
+    private ImageView receiverIcon;
     private ImageButton deleteButton;
-    private MainActivity mainActivityInstance;
+    private ImageFilterButton startChatButton;
+    private String chatNameText;
+    private String receiverLogin;
+    private Bitmap chatImage;
     private EncryptionKeys keys;
     private MessageDatabase messages;
-    private String receiverLogin;
-    private MessagesFragment instance;
-    public ChatPreview(MainActivity context, String chatName, Bitmap imagePreview, String receiverLogin, @Nullable MessagesFragment instance){
-        this.chatName = chatName;
-        this.imagePreview = imagePreview;
+    private MainActivity instance;
+    private ChatsFragment layoutInstance;
+    public ChatPreviewFragment(@NonNull String chatName, @NonNull String receiverLogin, @NonNull MainActivity instance, @Nullable Bitmap chatImage){
+        this.chatNameText = chatName;
         this.receiverLogin = receiverLogin;
-        mainActivityInstance = context;
+        this.chatImage = chatImage;
         this.instance = instance;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,47 +51,37 @@ public class ChatPreview extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        chatNameView=view.findViewById(R.id.chatName);
-        imageView = view.findViewById(R.id.imagePreview);
-        actionButton = view.findViewById(R.id.actionButton);
+        initFields(view);
+        setValues();
+    }
+    private void initFields(View view){
+        chatName = view.findViewById(R.id.chatName);
+        receiverIcon = view.findViewById(R.id.receiverImagePreview);
         deleteButton = view.findViewById(R.id.deleteChatButton);
+        startChatButton = view.findViewById(R.id.actionButton);
         keys = new EncryptionKeys(view.getContext(), null, null, 0);
         messages = new MessageDatabase(view.getContext(), null, null, 0);
-        imageView.setImageBitmap(imagePreview);
-        chatNameView.setText(chatName);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent intent = new Intent(mainActivityInstance, ChatActivity.class);
-               intent.putExtra("receiver", receiverLogin);
-               startActivity(intent);
-            }
-        });
+    }
+    private void setValues(){
+        chatName.setText(chatNameText);
+        if(chatImage!=null){
+            receiverIcon.setImageBitmap(chatImage);
+        }
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 keys.deleteKey(receiverLogin);
                 messages.deleteChat(receiverLogin);
-                if(instance!=null){
-                    instance.refreshChats();
-                }
+                instance.getBack();
             }
         });
-    }
-    public void setChatIcon(Bitmap image){
-        imagePreview = image;
-        imageView.setImageBitmap(imagePreview);
-    }
-    public void setChatName(String name){
-        chatName = name;
-        chatNameView.setText(chatName);
-    }
-
-    public String getChatName() {
-        return chatName;
-    }
-
-    public Bitmap getImagePreview() {
-        return imagePreview;
+        startChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(instance, ChatActivity.class);
+                intent.putExtra("receiver", receiverLogin);
+                startActivity(intent);
+            }
+        });
     }
 }

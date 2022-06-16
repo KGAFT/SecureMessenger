@@ -1,8 +1,7 @@
-package com.kgaft.securemessengerapp.Activities.ChatActivity.RecyclerSetter;
+package com.kgaft.securemessengerapp.Activities.ChatActivity.RecyclerView;
 
 
 
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

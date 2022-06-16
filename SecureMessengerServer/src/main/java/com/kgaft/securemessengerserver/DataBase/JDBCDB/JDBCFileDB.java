@@ -1,13 +1,13 @@
-package com.kgaft.securemessengerserver.DataBase.DAO;
+package com.kgaft.securemessengerserver.DataBase.JDBCDB;
 
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
 
 import java.sql.*;
 import java.util.Random;
 
-public class FileDAO {
+public class JDBCFileDB {
     private static final String url = "jdbc:postgresql://localhost:5432/securemessenger";
-    private static final String login = "KGAFTX";
+    private static final String login = "postgres";
 
     private static final String password = "12345";
 

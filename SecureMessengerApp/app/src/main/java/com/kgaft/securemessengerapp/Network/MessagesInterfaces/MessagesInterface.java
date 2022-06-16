@@ -11,12 +11,13 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface MessagesInterface {
-    @GET("/getMessages")
-    Call<ArrayList<MessageEntity>> getMessages(@Query("appId")String appId);
-    @GET("/getMessagesMoreThanTimeStamp")
-    Call<ArrayList<MessageEntity>> getMessagesByTimestamp(@Query("appId")String appId, @Query("timeInMilliseconds") long time);
+    @GET("/getMessagesByTime")
+    Call<ArrayList<MessageEntity>> getMessagesByTime(@Query("appId")String appId, @Query("timeInMilliseconds") long time);
+
     @GET("/getUserName")
     Call<ServerResponse> getUserName(@Query("appId") String appId, @Query("userLogin") String login);
     @POST("/sendMessage")
     Call<ServerResponse> sendMessage(@Query("appId") String appId, @Query("receiver") String receiver, @Query("text") String text, @Query("files") String files);
+    @GET("/getMessages")
+    Call<ArrayList<MessageEntity>> getAllMessages(@Query("appId") String appId);
 }

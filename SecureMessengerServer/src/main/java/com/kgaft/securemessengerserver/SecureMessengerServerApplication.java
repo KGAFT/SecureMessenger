@@ -1,9 +1,8 @@
 package com.kgaft.securemessengerserver;
 
-import com.kgaft.securemessengerserver.DataBase.DAO.FileDAO;
+import com.kgaft.securemessengerserver.DataBase.JDBCDB.JDBCFileDB;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.sql.SQLException;
 
@@ -13,7 +12,7 @@ public class SecureMessengerServerApplication {
 
     public static void main(String[] args) {
         try {
-            FileDAO.executeFilesTable();
+            JDBCFileDB.executeFilesTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }

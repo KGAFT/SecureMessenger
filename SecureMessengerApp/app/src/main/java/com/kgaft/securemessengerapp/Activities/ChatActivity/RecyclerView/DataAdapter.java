@@ -1,4 +1,4 @@
-package com.kgaft.securemessengerapp.Activities.ChatActivity.RecyclerSetter;
+package com.kgaft.securemessengerapp.Activities.ChatActivity.RecyclerView;
 
 import android.content.Context;
 import android.view.LayoutInflater;

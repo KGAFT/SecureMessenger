@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="retrofit-2.9.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/retrofit-2.9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,14 +1,19 @@
 package com.kgaft.securemessengerserver.Controllers;
 
 import com.google.gson.GsonBuilder;
-import com.kgaft.securemessengerserver.DataBase.JDBCDB.JDBCFileDB;
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.MessageEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
+import com.kgaft.securemessengerserver.DataBase.JDBCDB.JDBCFileDB;
+
 import com.kgaft.securemessengerserver.DataBase.Repositories.MessageRepo;
 import com.kgaft.securemessengerserver.Service.AuthorizedDevicesService;
+import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -74,14 +79,21 @@ public class MessageController {
         }
     }
     @PostMapping("/uploadFile")
-    public String uploadFile(InputStream dataStream, @RequestParam(name="fileName") String fileName, @RequestParam(name="appId")String appId) throws IOException {
+    public String uploadFile(@RequestParam MultipartFile file, @RequestParam(name="fileName") String fileName, @RequestParam(name="appId")String appId) throws IOException {
         if(AuthorizedDevicesService.authorize(appId)){
+            file.transferTo(new File(System.getenv("TEMP")+"/"+"file001.txt"));
+            FileInputStream fis = new FileInputStream(new File(System.getenv("TEMP")+"/"+"file001.txt"));
             FileEntity fileEntity = new FileEntity();
-            fileEntity.setInputStream(dataStream);
+            fileEntity.setInputStream(fis);
             fileEntity.setFileName(fileName);
             try {
-                return new ResponseEntity(String.valueOf(JDBCFileDB.saveFile(fileEntity))).toJson();
+                String fileId = String.valueOf(JDBCFileDB.saveFile(fileEntity));
+                fis.close();
+                new File(System.getenv("TEMP")+"/"+"file001.txt").delete();
+                return fileId;
             } catch (SQLException e) {
+                fis.close();
+                new File(System.getenv("TEMP")+"/"+"file001.txt").delete();
                 return "Failed";
             }
         }

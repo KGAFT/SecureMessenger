@@ -10,7 +10,5 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class DAOTest {
-    public static void main(String[] args) throws IOException, SQLException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        System.out.println(CryptoUtil.wrapString("helloworld!", "llop"));
-    }
+
 }

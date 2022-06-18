@@ -20,16 +20,24 @@ public class MessageEntity implements Crypt {
     private String sender;
     private String receiver;
     private String messagetext;
-    private long[] contentid;
+    private long[] contentId;
     private long time;
 
-    public MessageEntity(long messageid, String sender, String receiver, String messagetext, long[] contentid, long time) {
+    public MessageEntity(long messageid, String sender, String receiver, String messagetext, String contentId, long time) {
         this.messageid = messageid;
         this.sender = sender;
         this.receiver = receiver;
         this.messagetext = messagetext;
-        this.contentid = contentid;
         this.time = time;
+        try{
+            String[] contents = contentId.split(";");
+            this.contentId = new long[contents.length];
+            for(int counter = 0; counter<contents.length; counter++){
+                this.contentId[counter] = Long.parseLong(contents[counter]);
+            }
+        }catch (Exception e){
+
+        }
     }
 
     public MessageEntity() {
@@ -67,12 +75,20 @@ public class MessageEntity implements Crypt {
         this.messagetext = messagetext;
     }
 
-    public long[] getContentid() {
-        return contentid;
+    public long[] getContentId() {
+        return contentId;
     }
 
-    public void setContentid(long[] contentid) {
-        this.contentid = contentid;
+    public void setContentId(String contentId) {
+        try{
+            String[] contents = contentId.split(";");
+            this.contentId = new long[contents.length];
+            for(int counter = 0; counter<contents.length; counter++){
+                this.contentId[counter] = Long.parseLong(contents[counter]);
+            }
+        }catch (Exception e){
+
+        }
     }
 
     public long getTime() {

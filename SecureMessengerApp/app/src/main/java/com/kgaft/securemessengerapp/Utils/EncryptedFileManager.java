@@ -1,23 +1,12 @@
-
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.Multipart;
+package com.kgaft.securemessengerapp.Utils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,42 +19,66 @@ public class EncryptedFileManager {
     private String infoUrl;
     private String appId;
     private Cipher cipher;
+    private File tempFile;
+    private ArrayList<File> tempFiles = new ArrayList<>();
+
     public EncryptedFileManager(String downloadUrl, String uploadUrl, String infoUrl, String appId, byte[] encryptionKey, String baseDir) throws NoSuchPaddingException, NoSuchAlgorithmException {
         this.downloadUrl = downloadUrl;
-        this.uploadUrl= uploadUrl;
+        this.uploadUrl = uploadUrl;
         this.encryptionKey = encryptionKey;
         this.baseDir = baseDir;
         this.infoUrl = infoUrl;
-        this.appId=appId;
+        this.appId = appId;
         new File(baseDir).mkdirs();
         cipher = Cipher.getInstance("AES");
     }
-    public void downloadFileAndDecrypt(long fileId) throws IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        FileOutputStream fos = new FileOutputStream(baseDir+"/"+getFileName(fileId));
-        HttpURLConnection connection = (HttpURLConnection) new URL(downloadUrl+"?"+"appId="+appId+"&"+"fileId="+String.valueOf(fileId)).openConnection();
+
+    public String downloadFileAndDecrypt(long fileId) throws IOException, InvalidKeyException {
+        String fileName = getFileName(fileId);
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(encryptionKey, "AES"));
+        HttpURLConnection connection = (HttpURLConnection) new URL(downloadUrl + "?" + "appId=" + appId + "&" + "fileId=" + fileId).openConnection();
         connection.setDoInput(true);
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("GET");
         connection.connect();
-        CipherInputStream cis = new CipherInputStream(connection.getInputStream(), cipher);
-        byte[] buffer = new byte[4*1024];
+        File tempFile = saveTempInputFile(connection.getInputStream());
+        CipherInputStream cis = new CipherInputStream(new FileInputStream(tempFile), cipher);
+        FileOutputStream fos = new FileOutputStream(new File(baseDir+"/"+fileName));
         int read;
-        while((read =cis.read(buffer, 0, buffer.length))!=-1){
+        byte[] buffer = new byte[4*1024];
+        while((read=cis.read(buffer, 0, buffer.length))!=-1){
             fos.write(buffer, 0, read);
         }
         fos.flush();
+        fos.close();
+        tempFile.delete();
+        return baseDir+"/"+fileName;
     }
+
+    public File saveTempInputFile(InputStream is) throws IOException {
+        tempFile = new File(baseDir + "/" + "file" + new Random().nextInt() + ".txt");
+        while (tempFile.exists()) tempFile = new File(baseDir + "/" + "file" + new Random().nextInt() + ".txt");
+        FileOutputStream fos = new FileOutputStream(tempFile);
+        byte[] buffer = new byte[4 * 1024];
+        int read;
+        while ((read = is.read(buffer, 0, buffer.length)) != -1) {
+            fos.write(buffer, 0, read);
+        }
+        fos.flush();
+        return tempFile;
+    }
+
     public long uploadFile(File file) throws IOException, InvalidKeyException {
-        String post = "fileName="+file.getName()+"&"+"appId="+appId;
+        String post = "fileName=" + file.getName() + "&" + "appId=" + appId;
         File tempFile = saveTempEncryptedFile(file);
         String twoHyphens = "--";
-        String boundary =  "*****"+Long.toString(System.currentTimeMillis())+"*****";
+        String boundary = "*****" + Long.toString(System.currentTimeMillis()) + "*****";
         String lineEnd = "\r\n";
 
         String result = "";
 
         int bytesRead, bytesAvailable, bufferSize;
-        int maxBufferSize = 1*1024*1024;
+        int maxBufferSize = 1 * 1024 * 1024;
 
         FileInputStream fileInputStream = new FileInputStream(tempFile);
 
@@ -79,11 +92,11 @@ public class EncryptedFileManager {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("User-Agent", "Android Multipart HTTP Client 1.0");
-        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary="+boundary);
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-        outputStream.writeBytes("Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + tempFile.getName() +"\"" + lineEnd);
+        outputStream.writeBytes("Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + tempFile.getName() + "\"" + lineEnd);
         outputStream.writeBytes("Content-Type: text/txt" + lineEnd);
         outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
         outputStream.writeBytes(lineEnd);
@@ -93,7 +106,7 @@ public class EncryptedFileManager {
         byte[] buffer = new byte[bufferSize];
 
         bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-        while(bytesRead > 0) {
+        while (bytesRead > 0) {
             outputStream.write(buffer, 0, bufferSize);
             bytesAvailable = fileInputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
@@ -105,11 +118,11 @@ public class EncryptedFileManager {
         // Upload POST Data
         String[] posts = post.split("&");
         int max = posts.length;
-        for(int i=0; i<max;i++) {
+        for (int i = 0; i < max; i++) {
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             String[] kv = posts[i].split("=");
             outputStream.writeBytes("Content-Disposition: form-data; name=\"" + kv[0] + "\"" + lineEnd);
-            outputStream.writeBytes("Content-Type: text/plain"+lineEnd);
+            outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
             outputStream.writeBytes(lineEnd);
             outputStream.writeBytes(kv[1]);
             outputStream.writeBytes(lineEnd);
@@ -126,8 +139,9 @@ public class EncryptedFileManager {
         outputStream.close();
         return Long.parseLong(result);
     }
+
     public String getFileName(long fileId) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(infoUrl+"?appId="+appId+"&"+"fileId="+String.valueOf(fileId)).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(infoUrl + "?appId=" + appId + "&" + "fileId=" + fileId).openConnection();
         connection.setDoInput(true);
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("GET");
@@ -135,32 +149,33 @@ public class EncryptedFileManager {
         InputStream is = connection.getInputStream();
         return convertStreamToString(is);
     }
+
     public String convertStreamToString(InputStream stream) throws IOException {
         byte[] string = new byte[stream.available()];
         stream.read(string, 0, string.length);
         return new String(string);
     }
-    private byte[] decryptByteArray(byte[] data, int start, int len) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(encryptionKey, "AES"));
-        return cipher.doFinal(data, start, len);
-    }
-    private byte[] encryptByteArray(byte[] data, int start, int len) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptionKey, "AES"));
-        return cipher.doFinal(data, 0, len);
-    }
+
+
     public File saveTempEncryptedFile(File file) throws InvalidKeyException, IOException {
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptionKey, "AES"));
+        tempFile = new File(baseDir + "/" + "file" + new Random().nextInt() + ".txt");
+        while (tempFile.exists()) tempFile = new File(baseDir + "/" + "file" + new Random().nextInt() + ".txt");
         FileInputStream fis = new FileInputStream(file);
-        File tempFile = new File(baseDir+"/"+"file001.txt");
         FileOutputStream fos = new FileOutputStream(tempFile);
         CipherOutputStream cos = new CipherOutputStream(fos, cipher);
-        byte[] buffer = new byte[4*1024];
+        byte[] buffer = new byte[4 * 1024];
         int read;
-        while((read=fis.read(buffer, 0, buffer.length))!=-1){
+        while ((read = fis.read(buffer, 0, buffer.length)) != -1) {
             cos.write(buffer, 0, read);
         }
         cos.flush();
         cos.close();
         return tempFile;
+
+    }
+
+    public void deleteTempFile() {
+        tempFile.delete();
     }
 }

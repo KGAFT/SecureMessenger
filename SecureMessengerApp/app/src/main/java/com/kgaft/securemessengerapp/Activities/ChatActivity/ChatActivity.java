@@ -22,7 +22,10 @@ import com.kgaft.securemessengerapp.Network.Entities.MessageEntity;
 import com.kgaft.securemessengerapp.Network.MessageUtility;
 import com.kgaft.securemessengerapp.R;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.NoSuchPaddingException;
 
 public class ChatActivity extends AppCompatActivity {
     private String receiver;
@@ -50,7 +53,6 @@ public class ChatActivity extends AppCompatActivity {
         receiverLogin.setText(receiver);
         receiverName.setText(messageUtility.getReceiverName(receiver));
 
-
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,8 +68,32 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-        data = new DataAdapter(this, messages);
+        String serverAddress = client.getServerAddress();
+        try {
+            data = new DataAdapter(this, messages, serverAddress+"/getFile", serverAddress+"/uploadFile", serverAddress+"/getFileName", client.getAppData().getAsString("appId"), keys.getKey(receiver), getApplicationContext().getApplicationInfo().dataDir);
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         messagesRecycler.setAdapter(data);
+        messageHandlerThread.start();
+    }
+
+    private void initFields() {
+        messagesDb = new MessageDatabase(getApplicationContext(), null, null, 0);
+        keys = new EncryptionKeys(getApplicationContext(), null, null, 0);
+        client = new CurrentClientInfo(getApplicationContext(), null, null, 0);
+        messageUtility = new MessageUtility(client.getServerAddress(), client.getAppData().getAsString("appId"));
+
+        receiver = getIntent().getStringExtra("receiver");
+
+        receiverName = findViewById(R.id.receiverName);
+        receiverLogin = findViewById(R.id.receiverLogin);
+        sendButton = findViewById(R.id.sendButton);
+        messageText = findViewById(R.id.messageTextInput);
+        messagesRecycler = findViewById(R.id.messagesRecycler);
+        messagesRecycler.setLayoutManager(new LinearLayoutManager(this));
         messageHandlerThread = new Thread(new Runnable() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -93,23 +119,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-        messageHandlerThread.start();
-    }
-
-    private void initFields() {
-        messagesDb = new MessageDatabase(getApplicationContext(), null, null, 0);
-        keys = new EncryptionKeys(getApplicationContext(), null, null, 0);
-        client = new CurrentClientInfo(getApplicationContext(), null, null, 0);
-        messageUtility = new MessageUtility(client.getServerAddress(), client.getAppData().getAsString("appId"));
-
-        receiver = getIntent().getStringExtra("receiver");
-
-        receiverName = findViewById(R.id.receiverName);
-        receiverLogin = findViewById(R.id.receiverLogin);
-        sendButton = findViewById(R.id.sendButton);
-        messageText = findViewById(R.id.messageTextInput);
-        messagesRecycler = findViewById(R.id.messagesRecycler);
-        messagesRecycler.setLayoutManager(new LinearLayoutManager(this));
 
     }
 

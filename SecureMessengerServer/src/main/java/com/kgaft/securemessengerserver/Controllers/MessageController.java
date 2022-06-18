@@ -102,13 +102,14 @@ public class MessageController {
     @GetMapping("/getFile")
     public void getFile(@RequestParam(name="appId") String appId, @RequestParam(name= "fileId")long fileId, HttpServletResponse response) throws SQLException, IOException {
         if(AuthorizedDevicesService.authorize(appId)){
-            int canRead;
-            byte[] buffer = new byte[8*1024];
             FileEntity file = JDBCFileDB.getFileById(fileId);
-            InputStream is = file.getInputStream();
-            while((canRead= is.read(buffer))!=-1){
-                response.getOutputStream().write(buffer,0 , canRead);
+            byte[] buffer = new byte[4*1024];
+            int read;
+            while((read=file.getInputStream().read(buffer, 0, buffer.length))!=-1){
+                response.getOutputStream().write(buffer, 0, read);
             }
+            response.getOutputStream().flush();
+            file.getInputStream().close();
         }
 
     }

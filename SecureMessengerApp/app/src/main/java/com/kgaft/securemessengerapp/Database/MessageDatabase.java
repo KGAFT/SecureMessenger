@@ -14,21 +14,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.kgaft.securemessengerapp.Activities.MainActivity.MainActivity;
 import com.kgaft.securemessengerapp.Network.Entities.MessageEntity;
 import com.kgaft.securemessengerapp.R;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 public class MessageDatabase extends SQLiteOpenHelper {
     private static final String TABLE_NAME="Messages";
@@ -75,9 +67,9 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 parsedMessage.put("sender", message.getSender());
                 parsedMessage.put("time", message.getTime());
                 String files = "";
-                if(message.getContentid()!=null){
-                    for (long l : message.getContentid()) {
-                        files+=String.valueOf(l)+";";
+                if(message.getContentId()!=null){
+                    for (long l : message.getContentId()) {
+                        files+=l+";";
                     }
                 }
                 parsedMessage.put("files", files);
@@ -101,16 +93,7 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 message.setTime(data.getLong(data.getColumnIndex("time")));
                 message.setSender(data.getString(data.getColumnIndex("sender")));
                 String contentStr = data.getString(data.getColumnIndex("files"));
-                long[] content = new long[contentStr.split(";").length];
-                for(int counter = 0; counter<content.length; counter++){
-                    content[counter] = Long.parseLong(contentStr.split(";")[counter]);
-                }
-                if(content[0]==0){
-                    message.setContentid(null);
-                }
-                else{
-                    message.setContentid(content);
-                }
+                message.setContentId(contentStr);
                 messages.add(message);
             }while(data.moveToNext());
         }

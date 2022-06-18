@@ -56,7 +56,7 @@ public class MessageUtility {
         MessagesInterface messageController = retrofit.create(MessagesInterface.class);
         String files = "";
         try{
-            for (long l : message.getContentid()) {
+            for (long l : message.getContentId()) {
                 files+=String.valueOf(l)+";";
             }
         }catch (Exception e){

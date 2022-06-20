@@ -62,4 +62,5 @@ public class UserEntity implements IJsonObject{
     public String toJson() {
         return new Gson().toJson(this);
     }
+
 }

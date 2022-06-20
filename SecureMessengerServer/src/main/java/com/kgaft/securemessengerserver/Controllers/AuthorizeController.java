@@ -1,68 +1,86 @@
 package com.kgaft.securemessengerserver.Controllers;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.kgaft.securemessengerserver.DataBase.Entities.AuthorizedUserEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.UserEntity;
+import com.kgaft.securemessengerserver.DataBase.Repositories.AuthorizedUsersRepo;
 import com.kgaft.securemessengerserver.DataBase.Repositories.UserLoginRepo;
-import com.kgaft.securemessengerserver.Service.AuthorizedDevicesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 public class AuthorizeController {
     @Autowired
-    private UserLoginRepo repo;
-
+    private UserLoginRepo users;
+    @Autowired
+    private AuthorizedUsersRepo apps;
     @GetMapping("/authorizeClient")
     public String authorizeEntity(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password){
         ArrayList<UserEntity> findedUsers = new ArrayList<>();
-        repo.findByLogin(login).forEach(element->{
+        users.findByLogin(login).forEach(element->{
             if(element.getLogin().equals(login) & element.getPassword().equals(password)){
                 findedUsers.add(element);
             }
         });
         if(findedUsers.size()==1){
-            Random random = new Random();
-            long generatedAppId = random.nextLong();
-            while(AuthorizedDevicesService.authorize(String.valueOf(generatedAppId))) generatedAppId = random.nextLong();
-            AuthorizedDevicesService.addDevice(String.valueOf(generatedAppId), findedUsers.get(0));
-            String response = findedUsers.get(0).toJson();
-            response = response.split(",")[0]+","+response.split(",")[1]+","+response.split(",")[2]+","+Character.toString(34)+"appId"+Character.toString(34)+":"+Character.toString(34)+String.valueOf(generatedAppId)+Character.toString(34)+"}";
-            return response;
+            long appId = insertUserApp(findedUsers.get(0));
+            JsonObject userResponse = new Gson().toJsonTree(findedUsers.get(0)).getAsJsonObject();
+            userResponse.remove("password");
+            userResponse.addProperty("appId", appId);
+            return userResponse.toString();
         }
         else{
-            return "Failed";
+            return "Cannot find user, with this login";
         }
-
     }
     @PostMapping("/unAuthorizeClient")
     public String unAuthorize(@RequestParam(name="appId", required = true)String appId){
-        AuthorizedDevicesService.unAuthorize(appId);
+        apps.deleteById(Long.parseLong(appId));
         return new ResponseEntity("Success").toJson();
     }
     @PostMapping("/register")
     public String register(@RequestParam(name="login", required = true) String login, @RequestParam(name="password", required = true) String password, @RequestParam(name = "name")String name){
         ArrayList<UserEntity> results = new ArrayList<>();
-        repo.findByLogin(login).forEach(element->results.add(element));
+        users.findByLogin(login).forEach(element->results.add(element));
         if(results.size()>0){
             return new ResponseEntity("Cannot create user with same login!").toJson();
 
         }
         else{
-            repo.save(new UserEntity(0, name, login, password));
+            users.save(new UserEntity(0, name, login, password));
             return new ResponseEntity("Success!").toJson();
         }
     }
     @GetMapping("/checkConnection")
     public String checkConnection(@RequestParam(name="appId")String appId){
-        return new ResponseEntity(String.valueOf(AuthorizedDevicesService.authorize(appId))).toJson();
+        return new ResponseEntity(String.valueOf(authorizeByAppId(appId))).toJson();
+    }
+    @DeleteMapping("/deleteUser")
+    public void deleteUser(String appId){
+        users.deleteById(apps.findById(Long.parseLong(appId)).get().getUserId());
+        apps.deleteById(Long.parseLong(appId));
+    }
+    private long insertUserApp(UserEntity user){
+        try{
+            apps.deleteByUserId(user.getUserid());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        AuthorizedUserEntity userAuthorized = new AuthorizedUserEntity();
+        userAuthorized.setUserId(user.getUserid());
+        apps.save(userAuthorized);
+        return apps.getUserByUserId(user.getUserid()).get().getAppId();
+    }
+    private boolean authorizeByAppId(String appId){
+        try{
+            return apps.findById(Long.parseLong(appId)).get()!=null;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }

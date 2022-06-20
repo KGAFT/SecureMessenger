@@ -50,8 +50,7 @@ public class ChatActivity extends AppCompatActivity {
 
         initFields();
 
-        receiverLogin.setText(receiver);
-        receiverName.setText(messageUtility.getReceiverName(receiver));
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +118,8 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        receiverLogin.setText(receiver);
+        receiverName.setText(messageUtility.getReceiverName(receiver));
     }
 
     @Override

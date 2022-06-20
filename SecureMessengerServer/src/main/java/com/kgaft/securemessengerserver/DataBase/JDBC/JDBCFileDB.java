@@ -1,17 +1,32 @@
-package com.kgaft.securemessengerserver.DataBase.JDBCDB;
+package com.kgaft.securemessengerserver.DataBase.JDBC;
 
 import com.kgaft.securemessengerserver.DataBase.Entities.FileEntity;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.*;
 import java.util.Random;
 
-public class JDBCFileDB {
-    private static final String url = "jdbc:postgresql://localhost:5432/securemessenger";
-    private static final String login = "postgres";
+/**
+ * @author KGAFT
+ * @version 1.0
+ * This class helps to save files into postgresql
+ */
 
-    private static final String password = "12345";
+public class JDBCFileDB {
+
+    private static final String url;
+
+    private static final String login;
+
+
+    private static final String password;
 
     private static final String TABLE_NAME = "usersfiledata";
+    static {
+        url = System.getProperty("dataBaseUrl");
+        login = System.getProperty("dataBaseLogin");
+        password = System.getProperty("dataBasePassword");
+    }
 
     public static void executeFilesTable() throws SQLException {
         getConnection().createStatement().execute("CREATE TABLE "+TABLE_NAME+"(" +
@@ -20,6 +35,8 @@ public class JDBCFileDB {
                 "filename TEXT);");
     }
     private static Connection getConnection() throws SQLException {
+
+
         return DriverManager.getConnection(url, login, password);
     }
 

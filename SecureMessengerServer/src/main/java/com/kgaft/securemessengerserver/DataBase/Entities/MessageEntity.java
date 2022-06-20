@@ -11,13 +11,13 @@ import java.util.Date;
 public class  MessageEntity implements IJsonObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long messageid;
+    private long messageId;
     private String sender;
     private String receiver;
-    private String messagetext;
+    private String messageText;
     @Column(columnDefinition = "bigint[]")
     @Type(type = "com.vladmihalcea.hibernate.type.array.LongArrayType")
-    private long[] contentid = new long[]{0};
+    private long[] contentId = new long[]{0};
 
     public long time;
 
@@ -27,9 +27,9 @@ public class  MessageEntity implements IJsonObject{
     public MessageEntity(long id, String sender, String receiver, String text, long[] contentId) {
         this.sender = sender;
         this.receiver = receiver;
-        this.messagetext = text;
-        this.contentid = contentId;
-        this.messageid = id;
+        this.messageText = text;
+        this.contentId = contentId;
+        this.messageId = id;
     }
 
     public long getTime() {
@@ -41,11 +41,11 @@ public class  MessageEntity implements IJsonObject{
     }
 
     public long getMessageId() {
-        return messageid;
+        return messageId;
     }
 
     public void setMessageId(long messageId) {
-        this.messageid = messageId;
+        this.messageId = messageId;
     }
 
     public String getSender() {
@@ -65,11 +65,11 @@ public class  MessageEntity implements IJsonObject{
     }
 
     public String getText() {
-        return messagetext ;
+        return messageText ;
     }
 
     public void setText(String text) {
-        this.messagetext  = text;
+        this.messageText  = text;
     }
 
     @Override
@@ -79,10 +79,10 @@ public class  MessageEntity implements IJsonObject{
     }
 
     public long[] getContentId() {
-        return contentid;
+        return contentId;
     }
 
     public void setContentId(long[] contentId) {
-        this.contentid = contentId;
+        this.contentId = contentId;
     }
 }

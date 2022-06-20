@@ -2,8 +2,8 @@ package com.kgaft.securemessengerserver.Controllers;
 
 import com.kgaft.securemessengerserver.DataBase.Entities.ResponseEntity;
 import com.kgaft.securemessengerserver.DataBase.Entities.UserEntity;
+import com.kgaft.securemessengerserver.DataBase.Repositories.AuthorizedUsersRepo;
 import com.kgaft.securemessengerserver.DataBase.Repositories.UserLoginRepo;
-import com.kgaft.securemessengerserver.Service.AuthorizedDevicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,9 +15,18 @@ import java.util.ArrayList;
 public class UsersController {
     @Autowired
     private UserLoginRepo usersRepo;
+    @Autowired
+    private AuthorizedUsersRepo apps;
+
+    /**
+     *
+     * @param appId
+     * @param login
+     * @return username, of param login, need to get info about receiver
+     */
     @GetMapping("/getUserName")
     public String getUserName(@RequestParam(name = "appId")String appId, @RequestParam(name="userLogin") String login){
-        if(AuthorizedDevicesService.authorize(appId)){
+        if(authorizeByAppId(appId)){
             ArrayList<UserEntity> users = new ArrayList<>();
             usersRepo.findByLogin(login).forEach(element->{
                 users.add(element);
@@ -30,5 +39,13 @@ public class UsersController {
             }
         }
         return "Cannot authorize";
+    }
+    private boolean authorizeByAppId(String appId){
+        try{
+            return apps.findById(Long.parseLong(appId)).get()!=null;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }

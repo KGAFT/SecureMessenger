@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kgaft.securemessengerapp.Network.Entities.MessageEntity;
 import com.kgaft.securemessengerapp.R;
 import com.kgaft.securemessengerapp.Utils.EncryptedFileManager;
+import com.kgaft.securemessengerapp.Utils.FileManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,12 +27,12 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private ArrayList<MessageEntity> messages;
     private LayoutInflater inflater;
-    private EncryptedFileManager filesManager;
+    private FileManager filesManager;
 
     public DataAdapter(Context context, ArrayList<MessageEntity> messages, String downloadUrl, String uploadUrl, String infoUrl, String appId, byte[] encryptionKey, String baseDirectory) throws NoSuchPaddingException, NoSuchAlgorithmException {
         this.messages = messages;
         inflater = LayoutInflater.from(context);
-        filesManager = new EncryptedFileManager(downloadUrl, uploadUrl, infoUrl, appId, encryptionKey, baseDirectory);
+        filesManager = new FileManager(downloadUrl, uploadUrl, infoUrl, appId, encryptionKey, baseDirectory);
     }
 
 
@@ -49,12 +50,10 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.messageText.setText(message.getMessagetext());
         holder.senderName.setText(message.getSender());
-        ArrayList<String> imagesLocations = new ArrayList<>();
         try {
-            for (long l : messages.get(position).getContentId()) {
+            for (long l : message.getContentId()) {
                 try {
-                    String location = filesManager.downloadFileAndDecrypt(l);
-                    imagesLocations.add(location);
+                    filesManager.downloadFile(l);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -62,19 +61,12 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
         } catch (Exception e) {
 
         }
-        if (imagesLocations.size() > 0) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(new File(imagesLocations.get(0)));
-                byte[] image = new byte[fis.available()];
-                holder.messageImage.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+        try{
+            holder.messageImage.setImageBitmap(filesManager.getImageAsBitmap(message.getContentId()[0]));
+        }catch (Exception e){
 
         }
+
     }
 
     @Override

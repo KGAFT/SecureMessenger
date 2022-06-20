@@ -2,6 +2,10 @@ package com.kgaft.securemessengerserver.DataBase.Entities;
 
 import com.google.gson.Gson;
 
+/**
+ * @author KGAFT
+ * Entity to wrap, using string messages to json, as server request
+ */
 public class ResponseEntity implements IJsonObject{
     private String response;
 

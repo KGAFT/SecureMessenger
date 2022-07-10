@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Jul 10 03:11:58 MSK 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0181-e572-da99-0000035a53f8 
+on database directory /Users/danil/Documents/SecureMessenger/SecureMessengerPCClient/SecureMessengerAppDb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6a6824be 
+Loaded from file:/Users/danil/Documents/SecureMessenger/SecureMessengerPCClient/derby.jar
+java.vendor=Amazon.com Inc.
+java.runtime.version=11.0.15+9-LTS
+user.dir=/Users/danil/Documents/SecureMessenger/SecureMessengerPCClient
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.13.6
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.AuthorizeActivity.RegisterFragment">
+
+    <TextView
+        android:id="@+id/messengerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SecureMessenger"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp"/>
+    <TextView
+        android:id="@+id/errorOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/messengerName"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="60dp"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/serverAddressInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/messengerName"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="60dp"
+        android:hint="Server address:"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        />
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/serverAddressInput"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="60dp"
+        android:hint="Name:"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"/>
+    <EditText
+        android:id="@+id/loginInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/nameInput"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="60dp"
+        android:hint="Login:"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"/>
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/loginInput"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="70dp"
+        android:hint="Password:"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/black"
+        android:layout_alignTop="@+id/passwordInput"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="60dp"
+        android:text="Reigster"
+        android:textColor="@color/white"/>
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#D2D2CF"
+        android:layout_alignTop="@+id/registerButton"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="60dp"
+        android:textColor="@color/black"
+        android:text="Login"/>
+
+</RelativeLayout>

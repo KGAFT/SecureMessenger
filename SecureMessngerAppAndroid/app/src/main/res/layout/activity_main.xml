@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.MainActivity.MainActivity">
+    <RelativeLayout
+        android:id="@+id/mainActivityFragmentsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="680dp" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/fragmentsSwitcher"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#808080"
+        app:menu="@menu/main_activity_menu"/>
+</RelativeLayout>

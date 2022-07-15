@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_authorize.xml" value="0.5541666666666667" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_main.xml" value="0.5027173913043478" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_chat_preview.xml" value="0.31354166666666666" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_chats.xml" value="0.5027173913043478" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_login.xml" value="0.5541666666666667" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_register.xml" value="0.31354166666666666" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/menu/main_activity_menu.xml" value="0.553125" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/main_theme.xml" value="0.5027173913043478" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/network_config.xml" value="0.3661800486618005" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

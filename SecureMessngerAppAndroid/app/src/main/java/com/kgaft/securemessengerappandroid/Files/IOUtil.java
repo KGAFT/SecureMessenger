@@ -1,5 +1,11 @@
 package com.kgaft.securemessengerappandroid.Files;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -33,6 +39,35 @@ public class IOUtil {
         while((read = inputStream.read(buffer, 0, buffer.length))!=-1){
             outputStream.write(buffer, 0, read);
         }
+    }
+    @SuppressLint("Range")
+    public static String getUriFileName(Uri file, ContentResolver contentResolver){
+        Cursor fileInfo = contentResolver.query(file, null, null, null, null);
+        fileInfo.moveToFirst();
+        return fileInfo.getString(fileInfo.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+    }
+    @SuppressLint("Range")
+    public static long getUriFileSize(Uri file, ContentResolver contentResolver){
+        Cursor cursor = contentResolver.query(file, null, null, null, null);
+        if(cursor.moveToFirst()){
+            return cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
+        }
+        return 0;
+    }
+    public static File transferUriToCacheDir(Uri file, ContentResolver contentResolver, String cacheDirectory){
+        File fileCache = new File(cacheDirectory+"/"+getUriFileName(file, contentResolver));
+        try {
+            FileOutputStream fos = new FileOutputStream(fileCache);
+            InputStream uriIs = contentResolver.openInputStream(file);
+            writeInputStreamToOutputStream(uriIs, fos);
+            fos.flush();
+            uriIs.close();
+            fos.close();
+            return fileCache;
+        } catch (IOException e) {
+            return null;
+        }
+
     }
     public static void decryptFile(byte[] encryptionKey, String inputDestination, String outputDestination) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("AES");

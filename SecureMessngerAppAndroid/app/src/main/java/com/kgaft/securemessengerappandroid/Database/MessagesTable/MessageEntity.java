@@ -84,9 +84,14 @@ public class MessageEntity implements TableInterface, IEncrypted {
         values.add(new TableColumn("messageText", "TEXT", messageText));
         values.add(new TableColumn("time", "BIGINT", String.valueOf(time)));
         StringBuilder contentId = new StringBuilder();
-        for (long l : this.contentId) {
-            contentId.append(l).append(";");
+        try{
+            for (long l : this.contentId) {
+                contentId.append(l).append(";");
+            }
+        }catch (Exception e){
+            contentId.append("0").append(";");
         }
+
         values.add(new TableColumn("contentId", "TEXT", contentId.toString()));
         return values;
     }

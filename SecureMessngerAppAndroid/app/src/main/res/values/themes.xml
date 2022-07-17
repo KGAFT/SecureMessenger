@@ -16,4 +16,13 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.SecureMessengerAppAndroid.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SecureMessengerAppAndroid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SecureMessengerAppAndroid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

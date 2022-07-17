@@ -44,7 +44,7 @@ public class EncryptionKeysTable extends SQLiteOpenHelper {
     public void deleteKey(TableInterface key){
         TableColumn idColumn = key.getIDField();
         String idValue = idColumn.getColumnType().equals("TEXT")?"'":""+idColumn.getColumnValue()+(idColumn.getColumnType().equals("TEXT")?"'":"");
-        getWritableDatabase().execSQL("DELETE FROM "+TABLE_NAME+" WHERE "+idColumn.getColumnName()+"="+idValue+";");
+        getWritableDatabase().delete(TABLE_NAME, key.getIDField().getColumnName()+"=?", new String[]{key.getIDField().getColumnValue()});
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertKey(TableInterface key){

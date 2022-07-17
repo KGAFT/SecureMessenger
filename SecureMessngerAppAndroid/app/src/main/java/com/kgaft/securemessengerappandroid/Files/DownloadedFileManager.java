@@ -16,15 +16,8 @@ public class DownloadedFileManager {
         try{
             AppPropertiesTable appProperties = new AppPropertiesTable(context, null, AppProperty.class);
             AppProperty user = (AppProperty) appProperties.getProperties();
-
-            File file = getFileByReceiver(iconHolderLogin, filesDirectory);
-            if(file != null){
-                return file;
-            }
-            else{
-                String fileName = networkFiles.getFileName(user.getAppId(), "iconHolderLogin="+iconHolderLogin);
-                return networkFiles.downloadFile(iconHolderLogin+"."+IOUtil.getFileExtension(fileName), filesDirectory, "iconHolderLogin="+iconHolderLogin, user.getAppId());
-            }
+            String fileName = networkFiles.getFileName(user.getAppId(), "iconHolderLogin="+iconHolderLogin);
+            return networkFiles.downloadFile(iconHolderLogin+"."+IOUtil.getFileExtension(fileName), filesDirectory, "iconHolderLogin="+iconHolderLogin, user.getAppId());
         }catch (Exception e){
             return null;
         }
@@ -59,18 +52,5 @@ public class DownloadedFileManager {
         }
         return null;
     }
-    private static File getFileByReceiver(String receiver, String directory){
-        File file = new File(directory);
-        for (File listFile : file.listFiles()) {
-            try {
-                String fileName = IOUtil.getFileNameWithoutExtension(listFile.getName());
-                if(fileName.equals(receiver)){
-                    return listFile;
-                }
-            } catch (Exception e) {
 
-            }
-        }
-        return null;
-    }
 }

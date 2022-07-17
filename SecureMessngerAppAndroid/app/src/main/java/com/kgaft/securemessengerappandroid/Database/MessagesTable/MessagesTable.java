@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesTable extends SQLiteOpenHelper {
-    private static final String TABLE_NAME = "EncryptionKeys";
+    private static final String TABLE_NAME = "MessagesTable";
     private static final int VERSION = 1;
     private final Class<? extends TableInterface> messagesForm;
     public MessagesTable(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory, Class<? extends TableInterface> messagesForm) {
@@ -46,6 +46,9 @@ public class MessagesTable extends SQLiteOpenHelper {
             return true;
         }
         return false;
+    }
+    public void deleteMessagesByReceiverOrSender(String receiverOrSender){
+        getWritableDatabase().delete(TABLE_NAME, "receiver=? OR sender = ?", new String[]{receiverOrSender, receiverOrSender});
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public List<TableInterface> getMessagesByReceiverOrSender(String receiverOrSender) throws IllegalAccessException, InstantiationException {

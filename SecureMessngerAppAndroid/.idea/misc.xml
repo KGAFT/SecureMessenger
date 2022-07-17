@@ -12,6 +12,12 @@
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/menu/main_activity_menu.xml" value="0.553125" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/main_theme.xml" value="0.5027173913043478" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/network_config.xml" value="0.3661800486618005" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.16530797101449277" />
+        <entry key="app/src/main/res/layout/activity_start_chat.xml" value="0.14402173913043478" />
+        <entry key="app/src/main/res/layout/fragment_chat_preview.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_chats.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_file_to_send_preview.xml" value="0.16530797101449277" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -9,7 +9,8 @@
     <ImageView
         android:id="@+id/receiverIcon"
         android:layout_width="150dp"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:src="@drawable/user_icon"/>
 
     <TextView
         android:id="@+id/receiverName"
@@ -17,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/receiverIcon"
         android:layout_marginLeft="180dp"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        />
 
     <TextView
         android:id="@+id/receiverLogin"
@@ -28,11 +30,18 @@
         android:layout_marginLeft="180dp"
         android:layout_marginTop="50dp"
         android:textSize="15sp" />
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/delete_icon"/>
 
     <ImageButton
         android:id="@+id/actionButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"/>
 
 </RelativeLayout>

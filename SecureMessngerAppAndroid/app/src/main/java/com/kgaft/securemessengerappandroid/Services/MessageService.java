@@ -94,7 +94,7 @@ public class MessageService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        messageThread.start();
         return super.onStartCommand(intent, flags, startId);
     }
 

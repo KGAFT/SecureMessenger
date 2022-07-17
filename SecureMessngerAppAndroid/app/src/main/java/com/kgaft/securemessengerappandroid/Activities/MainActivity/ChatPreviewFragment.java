@@ -1,5 +1,9 @@
 package com.kgaft.securemessengerappandroid.Activities.MainActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +20,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kgaft.securemessengerappandroid.Activities.ChatActivity.ChatActivity;
 import com.kgaft.securemessengerappandroid.Database.AppPropertiesTable.AppPropertiesTable;
 import com.kgaft.securemessengerappandroid.Database.AppPropertiesTable.AppProperty;
+import com.kgaft.securemessengerappandroid.Database.EncryptionKeysTable.EncryptionKey;
+import com.kgaft.securemessengerappandroid.Database.EncryptionKeysTable.EncryptionKeysTable;
+import com.kgaft.securemessengerappandroid.Database.MessagesTable.MessageEntity;
+import com.kgaft.securemessengerappandroid.Database.MessagesTable.MessagesTable;
 import com.kgaft.securemessengerappandroid.Files.DownloadedFileManager;
 import com.kgaft.securemessengerappandroid.Files.FilesNativeCalls;
 import com.kgaft.securemessengerappandroid.Network.SecureMessenger;
@@ -33,6 +42,7 @@ public class ChatPreviewFragment extends Fragment {
     private TextView receiverName;
     private ImageButton actionButton;
     private String receiverLoginString;
+    private ImageButton deleteButton;
     public ChatPreviewFragment(String receiverLogin){
         this.receiverLoginString = receiverLogin;
     }
@@ -51,6 +61,7 @@ public class ChatPreviewFragment extends Fragment {
         receiverLogin = view.findViewById(R.id.receiverLogin);
         receiverName = view.findViewById(R.id.receiverName);
         actionButton = view.findViewById(R.id.actionButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
         try {
             initForReceiver();
         } catch (IllegalAccessException e) {
@@ -65,9 +76,55 @@ public class ChatPreviewFragment extends Fragment {
     private void initForReceiver() throws IllegalAccessException, java.lang.InstantiationException, IOException {
         AppProperty user = (AppProperty) new AppPropertiesTable(getContext(), null, AppProperty.class).getProperties();
         SecureMessenger messenger = new SecureMessenger(user.getServerBaseUrl());
-        File receiverIcon = DownloadedFileManager.getFile(getContext(), receiverLoginString, new FilesNativeCalls(user.getServerBaseUrl()), getContext().getCacheDir().getAbsolutePath());
-        this.receiverImage.setImageBitmap(BitmapFactory.decodeFile(receiverIcon.getAbsolutePath()));
-        this.receiverName.setText(messenger.getUserName(user.getAppId(), receiverLoginString));
+        actionButton.setOnClickListener(event->{
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra("receiverLogin", receiverLoginString);
+            startActivity(intent);
+        });
         this.receiverLogin.setText(receiverLoginString);
+        deleteButton.setOnClickListener(event->{
+            prepareDeleteAlertDialog().show();
+        });
+        new Thread(()->{
+            try{
+                File receiverIcon = DownloadedFileManager.getFile(getContext(), receiverLoginString, new FilesNativeCalls(user.getServerBaseUrl()), getContext().getCacheDir().getAbsolutePath());
+                setIcon(BitmapFactory.decodeFile(receiverIcon.getAbsolutePath()));
+                setReceiverName(messenger.getUserName(user.getAppId(), receiverLoginString));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }).start();
+
+    }
+    private void setIcon(Bitmap icon){
+        getActivity().runOnUiThread(()->{
+            this.receiverImage.setImageBitmap(icon);
+        });
+    }
+    private void setReceiverName(String receiverName){
+        getActivity().runOnUiThread(()->{
+            this.receiverName.setText(receiverName);
+        });
+    }
+    private void delete(){
+        EncryptionKeysTable keys = new EncryptionKeysTable(getContext(), null, EncryptionKey.class);
+        MessagesTable messages = new MessagesTable(getContext(), null, MessageEntity.class);
+        keys.deleteKey(new EncryptionKey(receiverLoginString, null));
+        messages.deleteMessagesByReceiverOrSender(receiverLoginString);
+    }
+    private AlertDialog prepareDeleteAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Do you wanna delete dialog with: "+receiverLoginString);
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            delete();
+            startActivity(new Intent(getContext(), MainActivity.class));
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        return builder.create();
     }
 }

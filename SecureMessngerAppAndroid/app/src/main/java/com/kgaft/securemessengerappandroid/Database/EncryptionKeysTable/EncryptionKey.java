@@ -10,11 +10,26 @@ import java.util.List;
 public class EncryptionKey implements TableInterface {
     private String receiver;
     private byte[] encryptionKey;
+
+    public EncryptionKey(String receiver, byte[] encryptionKey) {
+        this.receiver = receiver;
+        this.encryptionKey = encryptionKey;
+    }
+
+    public EncryptionKey() {
+    }
+
+
     @Override
     public List<TableColumn> getAllValues() {
         List<TableColumn> values = new ArrayList<>();
         values.add(new TableColumn("receiver", "TEXT", receiver));
-        values.add(new TableColumn("encryptionKey", "TEXT", EncryptionUtil.keyToString(encryptionKey)));
+        try{
+            values.add(new TableColumn("encryptionKey", "TEXT", EncryptionUtil.keyToString(encryptionKey)));
+        }catch (Exception e){
+            values.add(new TableColumn("encryptionKey", "TEXT", null));
+
+        }
         return values;
     }
 

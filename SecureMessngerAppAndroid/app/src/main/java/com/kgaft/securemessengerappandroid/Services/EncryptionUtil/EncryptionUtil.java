@@ -11,6 +11,7 @@ import com.kgaft.securemessengerappandroid.Database.TableColumn;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -56,6 +57,11 @@ public class EncryptionUtil {
         });
         objectToEncrypt.initWithValues(encryptedFields);
         return objectToEncrypt;
+    }
+    public static byte[] generateEncryptionKey() throws NoSuchAlgorithmException {
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(256);
+        return keyGen.generateKey().getEncoded();
     }
     public static String byteArrayToString(byte[] array){
         StringBuilder result = new StringBuilder();

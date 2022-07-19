@@ -25,8 +25,8 @@ public class FilesEncryptedNativeCalls {
         this.infoUrl = serverUrl+"getFileName";
     }
 
-    public File downloadAndDecryptFile(long appId, long fileId, byte[] key, String destinationFolder) {
-        File tempFile = new File(generateFileName(destinationFolder));
+    public File downloadAndDecryptFile(long appId, long fileId, byte[] key, String destinationFolder, String tempFolder) {
+        File tempFile = new File(generateFileName(tempFolder));
         try{
             FileOutputStream fos = new FileOutputStream(tempFile);
             HttpURLConnection connection = (HttpURLConnection) new URL(downloadUrl+"?appId="+appId+"&fileId="+fileId).openConnection();

@@ -31,7 +31,7 @@ public class FileController {
     @PostMapping("/uploadFile")
     public String uploadFile(@RequestParam MultipartFile file, @RequestParam(name="fileName") String fileName, @RequestParam(name="appId")String appId) throws IOException {
         if(authorizeByAppId(appId)){
-            TempFileService fileService = new TempFileService("/Users/danil/Downloads/");
+            TempFileService fileService = new TempFileService(System.getenv("TEMP"));
             try{
                 fileService.saveTempMultipartFile(file);
                 FileEntity fileEntity = new FileEntity();
@@ -56,7 +56,7 @@ public class FileController {
             }catch (Exception e){
 
             }
-            TempFileService fileService = new TempFileService("/Users/danil/Downloads/");
+            TempFileService fileService = new TempFileService(System.getenv("TEMP"));
             try{
                 fileService.saveTempImportantFile(file);
                 FileEntity fileEntity = new FileEntity();

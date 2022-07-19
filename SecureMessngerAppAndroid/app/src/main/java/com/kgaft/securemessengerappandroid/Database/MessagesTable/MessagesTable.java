@@ -52,7 +52,10 @@ public class MessagesTable extends SQLiteOpenHelper {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public List<TableInterface> getMessagesByReceiverOrSender(String receiverOrSender) throws IllegalAccessException, InstantiationException {
-        return cursorToTableInterfaces(getReadableDatabase().query(TABLE_NAME, SQLUtil.columnsToSelect(messagesForm.newInstance().getAllValues()), "receiver = ? OR sender = ?", new String[]{receiverOrSender, receiverOrSender}, null, null, null));
+        return cursorToTableInterfaces(getReadableDatabase().query(TABLE_NAME, SQLUtil.columnsToSelect(messagesForm.newInstance().getAllValues()), "receiver = ? OR sender = ?", new String[]{receiverOrSender, receiverOrSender}, null, null, "time ASC"));
+    }
+    public void deleteAll(){
+        getWritableDatabase().delete(TABLE_NAME, null, null);
     }
     @SuppressLint("Range")
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -74,4 +77,5 @@ public class MessagesTable extends SQLiteOpenHelper {
         Cursor cursor = getReadableDatabase().query(TABLE_NAME, new String[]{messageExample.getIDField().getColumnName()}, messageExample.getIDField().getColumnName()+"=?", new String[]{idFieldValue}, null, null, null);
         return cursor.moveToFirst();
     }
+
 }

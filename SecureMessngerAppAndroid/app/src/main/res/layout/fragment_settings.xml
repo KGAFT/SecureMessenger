@@ -5,19 +5,52 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".Activities.MainActivity.SettingsFragment">
-
-    <ImageView
-        android:id="@+id/appUserIcon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="160dp"
-        android:layout_marginTop="100dp"/>
-    <TextView
-        android:id="@+id/receiverLoginApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/appUserIcon"
-        android:layout_marginTop="120dp"
-        android:layout_marginLeft="140dp"/>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/userInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/userIcon"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginLeft="130dp"/>
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:layout_alignTop="@+id/userIcon"
+                    android:layout_marginTop="150dp"
+                    android:layout_marginLeft="130dp"/>
+            </RelativeLayout>
+            <Button
+                android:id="@+id/clearCacheButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Clear cache, total: "/>
+            <Button
+                android:id="@+id/exportEncryptionKeysButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Export encryption keys"/>
+            <Button
+                android:id="@+id/importEncryptionKeys"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="import encryption keys"/>
+            <Button
+                android:id="@+id/exitButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="exit"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

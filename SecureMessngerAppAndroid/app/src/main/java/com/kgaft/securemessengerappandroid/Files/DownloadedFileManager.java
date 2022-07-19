@@ -23,7 +23,7 @@ public class DownloadedFileManager {
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static File getEncryptedFile(Context context, long fileId, FilesEncryptedNativeCalls filesEncrypted, byte[] encryptionKey, String filesDirectory){
+    public static File getEncryptedFile(Context context, long fileId, FilesEncryptedNativeCalls filesEncrypted, byte[] encryptionKey, String filesDirectory, String tempDIr){
         try{
             File file = getFileById(fileId, filesDirectory);
             if(file!=null){
@@ -31,7 +31,7 @@ public class DownloadedFileManager {
             }
             else{
                 AppProperty appUser = (AppProperty) new AppPropertiesTable(context, null, AppProperty.class).getProperties();
-                return filesEncrypted.downloadAndDecryptFile(appUser.getAppId(), fileId, encryptionKey, filesDirectory);
+                return filesEncrypted.downloadAndDecryptFile(appUser.getAppId(), fileId, encryptionKey, filesDirectory, tempDIr);
             }
 
         }catch (Exception ignored){

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MessageService extends Service {
-    volatile boolean running = false;
+    volatile boolean running = true;
     private Thread messageThread;
 
     public MessageService() {
@@ -44,6 +44,7 @@ public class MessageService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        running = true;
         messageThread = new Thread(() -> {
             AppPropertiesTable propertiesTable = new AppPropertiesTable(getApplicationContext(), null, AppProperty.class);
             EncryptionKeysTable keys = new EncryptionKeysTable(getApplicationContext(), null, EncryptionKey.class);
@@ -57,8 +58,10 @@ public class MessageService extends Service {
                         List<MessageEntity> newMessages;
                         if (lastTimeGettingMessages == 0) {
                             newMessages = messenger.getAllMessages(property.getAppId());
+                            lastTimeGettingMessages = System.currentTimeMillis();
                         } else {
-                            newMessages = messenger.getLastMessagesByTime(property.getAppId(), lastTimeGettingMessages-10000);
+                            newMessages = messenger.getLastMessagesByTime(property.getAppId(), lastTimeGettingMessages - 1000 * 60);
+                            lastTimeGettingMessages = System.currentTimeMillis();
                         }
                         for (MessageEntity message : newMessages) {
                             EncryptionKey messageKey;
@@ -75,32 +78,44 @@ public class MessageService extends Service {
                                 try {
                                     MessageEntity messageToInsert = (MessageEntity) EncryptionUtil.decrypt(message, messageKey.getEncryptionKey());
                                     if (messagesTable.insertMessage(messageToInsert)) {
-                                        sendNotify(messageToInsert.getMessageText());
-                                    }
-                                } catch (Exception ignored) {
+                                        if (!messageToInsert.getSender().equals(property.getLogin())) {
+                                            sendNotify(messageToInsert.getMessageText());
+                                        }
 
+                                    }
+                                } catch (Exception e) {
+                                    lastTimeGettingMessages = System.currentTimeMillis();
                                 }
                             }
                         }
-                        lastTimeGettingMessages = System.currentTimeMillis();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    lastTimeGettingMessages = System.currentTimeMillis();
                 }
-            catch(Exception ignored){
-
             }
-        }
-    });
-}
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        running = false;
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        messageThread.start();
+        try {
+            messageThread.start();
+        } catch (Exception e) {
+
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendNotify(String text) {
-        String notification;
         NotificationManager mNotificationManager;  //Creating notifier manager
 
         NotificationCompat.Builder mBuilder =

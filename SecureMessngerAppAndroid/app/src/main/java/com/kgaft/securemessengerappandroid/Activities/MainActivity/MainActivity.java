@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startService(new Intent(getApplicationContext(), MessageService.class));
+
         fragmentsSwitcher = findViewById(R.id.fragmentsSwitcher);
         appSettings = new SettingsFragment();
         availableChats = new ChatsFragment();
@@ -47,10 +47,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
         });
     }
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
 
-    }
     @Override
     public void onBackPressed() {
 

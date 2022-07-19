@@ -20,6 +20,7 @@ import com.kgaft.securemessengerappandroid.Network.SecureMessenger;
 import com.kgaft.securemessengerappandroid.R;
 import com.kgaft.securemessengerappandroid.Services.EncryptionUtil.EncryptionUtil;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 public class StartChatActivity extends AppCompatActivity {
@@ -70,25 +71,37 @@ public class StartChatActivity extends AppCompatActivity {
         waitingToJoinThread.start();
         encryptionKeyOut.setText(EncryptionUtil.byteArrayToString(generatedKey) + "/r" + currentAppUser.getLogin());
         saveEncryptionKey.setOnClickListener(event -> {
-            String[] encryptionKeyUser = encryptionKeyInput.getText().toString().split("/r");
-            byte[] receivedEncryptionKey = EncryptionUtil.encryptedStringToByteArray(encryptionKeyUser[0]);
-            String receiver = encryptionKeyUser[1];
-            try {
-                SecureMessenger messenger = new SecureMessenger(currentAppUser.getServerBaseUrl());
-                if (messenger.joinChat(currentAppUser.getAppId(), receiver)) {
-                    keys.insertKey(new EncryptionKey(receiver, receivedEncryptionKey));
-                    running = false;
-                    waitingToJoinThread.stop();
+            try{
+                String[] encryptionKeyUser = encryptionKeyInput.getText().toString().split("/r");
+                byte[] receivedEncryptionKey = EncryptionUtil.encryptedStringToByteArray(encryptionKeyUser[0]);
+                String receiver = encryptionKeyUser[1];
+                try {
+                    new Thread(()->{
+                        SecureMessenger messenger = new SecureMessenger(currentAppUser.getServerBaseUrl());
+                        try {
+                            if (messenger.joinChat(currentAppUser.getAppId(), receiver)) {
+                                keys.insertKey(new EncryptionKey(receiver, receivedEncryptionKey));
+                                running = false;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
                     startActivity(new Intent(this, MainActivity.class));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            }catch (Exception e){
+
             }
+
         });
     }
-
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
     }
+
 }

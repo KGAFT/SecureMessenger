@@ -4,11 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_authorize.xml" value="0.5541666666666667" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_chat.xml" value="0.3582427536231884" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_main.xml" value="0.5027173913043478" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/activity_start_chat.xml" value="0.5541666666666667" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_chat_preview.xml" value="0.31354166666666666" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_chats.xml" value="0.5027173913043478" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_file_to_send_preview.xml" value="0.25" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_login.xml" value="0.5541666666666667" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_message.xml" value="0.45488257107540175" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_message_file.xml" value="0.5541666666666667" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_register.xml" value="0.31354166666666666" />
+        <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/menu/main_activity_menu.xml" value="0.553125" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/main_theme.xml" value="0.5027173913043478" />
         <entry key="..\:/documents/projects/GitHub/SecureMessenger/SecureMessngerAppAndroid/app/src/main/res/xml/network_config.xml" value="0.3661800486618005" />

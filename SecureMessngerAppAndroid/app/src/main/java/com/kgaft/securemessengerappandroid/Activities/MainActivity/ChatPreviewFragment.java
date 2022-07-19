@@ -46,6 +46,10 @@ public class ChatPreviewFragment extends Fragment {
     public ChatPreviewFragment(String receiverLogin){
         this.receiverLoginString = receiverLogin;
     }
+
+    public ChatPreviewFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,4 +131,6 @@ public class ChatPreviewFragment extends Fragment {
         });
         return builder.create();
     }
+
+
 }

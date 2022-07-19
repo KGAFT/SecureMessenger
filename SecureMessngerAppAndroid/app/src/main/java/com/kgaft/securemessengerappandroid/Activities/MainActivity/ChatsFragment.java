@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kgaft.securemessengerappandroid.Activities.StartChatActivity.StartChatActivity;
@@ -28,6 +29,7 @@ public class ChatsFragment extends Fragment {
     private Thread chatsAdderThread;
     private EncryptionKeysTable keysTable;
     private FloatingActionButton startChatButton;
+    private LinearLayout chatsContainer;
     volatile boolean threadRunning = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,12 +42,16 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         keysTable = new EncryptionKeysTable(getContext(), null, EncryptionKey.class);
         startChatButton = view.findViewById(R.id.startNewChatButton);
+        chatsContainer = view.findViewById(R.id.chatsContainer);
         startChatButton.setOnClickListener(event->{
             startActivity(new Intent(getContext(), StartChatActivity.class));
         });
-
+        initChatAdderThread();
+        chatsContainer.removeAllViews();
+        threadRunning = true;
         initChatAdderThread();
         chatsAdderThread.start();
     }
@@ -55,12 +61,32 @@ public class ChatsFragment extends Fragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!threadRunning){
+            threadRunning = true;
+            initChatAdderThread();
+            chatsAdderThread.start();
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        chatsContainer.removeAllViews();
         threadRunning = false;
-        chatsAdderThread.stop();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        chatsContainer.removeAllViews();
+        threadRunning = false;
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initChatAdderThread(){
         chatsAdderThread = new Thread(()->{
@@ -83,8 +109,5 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
 
-    }
 }

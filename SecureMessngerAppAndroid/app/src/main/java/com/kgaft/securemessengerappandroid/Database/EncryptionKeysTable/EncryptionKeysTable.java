@@ -46,6 +46,9 @@ public class EncryptionKeysTable extends SQLiteOpenHelper {
         String idValue = idColumn.getColumnType().equals("TEXT")?"'":""+idColumn.getColumnValue()+(idColumn.getColumnType().equals("TEXT")?"'":"");
         getWritableDatabase().delete(TABLE_NAME, key.getIDField().getColumnName()+"=?", new String[]{key.getIDField().getColumnValue()});
     }
+    public void deleteAllKeys(){
+        getWritableDatabase().delete(TABLE_NAME, null, null);
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertKey(TableInterface key){
         try {
@@ -81,5 +84,16 @@ public class EncryptionKeysTable extends SQLiteOpenHelper {
         result.getAllValues().forEach(column-> values.add(new TableColumn(column.getColumnName(), column.getColumnType(), cursor.getString(cursor.getColumnIndex(column.getColumnName())))));
         result.initWithValues(values);
         return result;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<TableInterface> getAllKeys() throws IllegalAccessException, InstantiationException {
+        SQLiteDatabase db = getReadableDatabase();
+        List<TableInterface> keys = new ArrayList<>();
+        Cursor cursor = db.query(TABLE_NAME, SQLUtil.columnsToSelect(keysForm.newInstance().getAllValues()), null, null, null, null, null);
+        cursor.moveToFirst();
+        do{
+            keys.add(cursorToTableInterface(cursor));
+        }while (cursor.moveToNext());
+        return keys;
     }
 }
